@@ -6,9 +6,9 @@ public class Rock : MonoBehaviour {
 
     [SerializeField] Vector3 TopPosition;
     [SerializeField] Vector3 BottomPosition;
-
-	// Use this for initialization
-	void Start () {
+    [SerializeField] private float Speed = ;
+    // Use this for initialization
+    void Start () {
         StartCoroutine(Move(BottomPosition));
 	}
 	
@@ -19,13 +19,13 @@ public class Rock : MonoBehaviour {
         while (Mathf.Abs((target - transform.localPosition).y) > 0.20f)
         {
             Vector3 Direction = target.y == TopPosition.y ? Vector3.up : Vector3.down;
-            transform.localPosition += Direction * Time.deltaTime;
+            transform.localPosition += Direction *(Speed* Time.deltaTime);
             yield return null;
         }
 
         yield return new WaitForSeconds(0.5f);
 
-        Vector3 NewTarget = target.y == TopPosition.y ? Vector3.up : Vector3.down;
+        Vector3 NewTarget = target.y == TopPosition.y ? BottomPosition : TopPosition;
 
         StartCoroutine(Move(NewTarget));
     }
