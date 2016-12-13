@@ -14,7 +14,11 @@ public class Objects : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        //move the bridge
         transform.Translate(Vector3.left*(ObjectSpeed*Time.deltaTime));
+
+        //rests the bridge position when it ends
         if (transform.localPosition.x<=ResetPosition)
         {
             Vector3 NewPos = new Vector3(59.6f, transform.position.y, transform.position.z);
