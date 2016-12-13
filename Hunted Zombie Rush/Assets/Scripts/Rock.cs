@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rock : MonoBehaviour {
+public class Rock : Objects {
 
     [SerializeField] Vector3 TopPosition;
     [SerializeField] Vector3 BottomPosition;
-    [SerializeField] private float Speed = ;
+    [SerializeField] private float Speed = 3;
     // Use this for initialization
     void Start () {
         StartCoroutine(Move(BottomPosition));
 	}
 	
+    protected override void Update()
+    {
+        base.Update();
+    }
 
     //move the rock up and down
 	IEnumerator Move(Vector3 target)
