@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 189abc8ca2a17f541bd2ae9e8de16f12
-timeCreated: 1481634208
+guid: e96b5b1fe736b7e4f9452b68ef5b1bd0
+timeCreated: 1484909106
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -30,7 +30,8 @@ ModelImporter:
     400020: right_shoulder_zomb
     400022: root
     4300000: brian
-    7400000: Take 001
+    7400000: Ideal
+    7400002: Jump
     9500000: //RootNode
     13700000: brian
   materials:
@@ -53,7 +54,111 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Ideal
+      takeName: Take 001
+      firstFrame: 6
+      lastFrame: 65
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: brian
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/butt_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/head_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/left_shoulder_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/left_shoulder_zomb/left_arm_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/left_shoulder_zomb/left_arm_zomb/left_hand_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/right_shoulder_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/right_shoulder_zomb/right_arm_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/right_shoulder_zomb/right_arm_zomb/right_hand_zomb
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Jump
+      takeName: Take 001
+      firstFrame: 395
+      lastFrame: 399
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: brian
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/butt_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/head_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/left_shoulder_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/left_shoulder_zomb/left_arm_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/left_shoulder_zomb/left_arm_zomb/left_hand_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/right_shoulder_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/right_shoulder_zomb/right_arm_zomb
+        weight: 1
+      - path: root/butt_zomb/body_zomb/right_shoulder_zomb/right_arm_zomb/right_hand_zomb
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
