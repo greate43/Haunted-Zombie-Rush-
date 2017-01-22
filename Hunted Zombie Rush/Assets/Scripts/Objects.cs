@@ -1,31 +1,31 @@
 ﻿using UnityEngine;
 
-public class Objects : MonoBehaviour {
-
+public class Objects : MonoBehaviour
+{
     // Use this for initialization
 
-    [SerializeField] private float ObjectSpeed=2;
-    [SerializeField] private float ResetPosition=-21.65f;
-    [SerializeField] private float StartPosition= 59.6f;
+    [SerializeField] private float _objectSpeed = 2;
+    [SerializeField] private float _resetPosition = -21.65f;
+    [SerializeField] private float _startPosition = 59.6f;
 
-    void Start () {
-		
+    void Start()
+    {
     }
-	
+
     // Update is called once per frame
-    protected virtual void Update () {
+    protected virtual void Update()
+    {
         if (!GameManager.Instance.GameOver)
         {
             //move the bridge
-            transform.Translate(Vector3.left * (ObjectSpeed * Time.deltaTime));
+            transform.Translate(Vector3.left * (_objectSpeed * Time.deltaTime));
 
             //rests the bridge position when it ends
-            if (transform.localPosition.x <= ResetPosition)
+            if (transform.localPosition.x <= _resetPosition)
             {
-                Vector3 NewPos = new Vector3(StartPosition, transform.position.y, transform.position.z);
-                transform.position = NewPos;
+                Vector3 newPos = new Vector3(_startPosition, transform.position.y, transform.position.z);
+                transform.position = newPos;
             }
         }
-        
     }
 }

@@ -1,15 +1,14 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float _jumpForce = 100f;
-     [SerializeField] private AudioClip _sfxJump;
+    [SerializeField] private AudioClip _sfxJump;
     [SerializeField] private AudioClip _sfxDeath;
     private Animator _anim;
     private Rigidbody _rigidBody;
-    private bool _jump = false;
+    private bool _jump;
     private AudioSource _audioSource;
     // Use this for initialization
 
@@ -34,7 +33,8 @@ public class Player : MonoBehaviour
         if (!GameManager.Instance.GameOver)
         {
             if (Input.GetMouseButtonDown(0))
-            {    GameManager.Instance.PlayerStartedGame();
+            {
+                GameManager.Instance.PlayerStartedGame();
                 _anim.Play("Jump");
                 _audioSource.PlayOneShot(_sfxJump);
                 _rigidBody.useGravity = true;
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     //if true the player will jump
     private void FixedUpdate()
     {
-        if (_jump == true)
+        if (_jump)
         {
             _jump = false;
             _rigidBody.velocity = new Vector2(0, 0);
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("obstacles"))
         {
-            _rigidBody.AddForce(new Vector2(-50,20),ForceMode.Impulse);
+            _rigidBody.AddForce(new Vector2(-50, 20), ForceMode.Impulse);
             _rigidBody.detectCollisions = false;
             _audioSource.PlayOneShot(_sfxDeath);
             GameManager.Instance.PlayerCollided();

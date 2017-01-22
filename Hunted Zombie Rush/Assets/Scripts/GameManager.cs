@@ -1,22 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance = null;
-    private bool _playerActive=false;
-    private bool _gameOver = false;
+    public static GameManager Instance;
+    private bool _playerActive;
+    private bool _gameOver;
 
 
     public bool ActivePlayer
     {
         get { return _playerActive; }
     }
+
     public bool GameOver
     {
         get { return _gameOver; }
     }
+
     private void Awake()
     {
         if (Instance == null)
@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
-
 
 
     // Use this for initialization
