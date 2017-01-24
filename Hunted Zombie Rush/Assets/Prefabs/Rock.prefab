@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114357363727006364}
   m_Layer: 0
   m_Name: Rock
-  m_TagString: obstacles
+  m_TagString: RockObstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,9 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfeba3a5a650d674883a3b64b874f0da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectSpeed: 2
-  ResetPosition: -7.41
-  StartPosition: 32.35
+  _objectSpeed: 2
+  _resetPosition: -21.65
+  _startPosition: 59.6
   _topPosition: {x: 0, y: 13.8, z: 0}
   _bottomPosition: {x: 0, y: 2.11, z: 0}
   _speed: 3

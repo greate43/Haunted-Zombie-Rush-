@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     private bool _playerActive;
     private bool _gameOver;
-
+    private bool _playerJumps;
 
     public bool ActivePlayer
     {
@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
     public bool GameOver
     {
         get { return _gameOver; }
+    }
+
+    public bool PlayerCantJump
+    {
+        get { return _playerJumps; }
     }
 
     private void Awake()
@@ -30,17 +35,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-
-    // Use this for initialization
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void PlayerCollided()
     {
         _gameOver = true;
@@ -49,5 +43,10 @@ public class GameManager : MonoBehaviour
     public void PlayerStartedGame()
     {
         _playerActive = true;
+    }
+
+    public void PlayerCantJumpAboveScreen()
+    {
+        _playerJumps = true;
     }
 }

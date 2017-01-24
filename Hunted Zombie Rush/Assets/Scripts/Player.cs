@@ -30,17 +30,13 @@ public class Player : MonoBehaviour
     //0 means left
     protected void Update()
     {
-        if (!GameManager.Instance.GameOver)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                GameManager.Instance.PlayerStartedGame();
-                _anim.Play("Jump");
-                _audioSource.PlayOneShot(_sfxJump);
-                _rigidBody.useGravity = true;
-                _jump = true;
-            }
-        }
+        if (GameManager.Instance.GameOver) return;
+        if (!Input.GetMouseButtonDown(0)) return;
+        GameManager.Instance.PlayerStartedGame();
+        _anim.Play("Jump");
+        _audioSource.PlayOneShot(_sfxJump);
+        _rigidBody.useGravity = true;
+        _jump = true;
     }
 
     //fixed updates per sec
@@ -57,7 +53,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("obstacles"))
+        if (other.gameObject.CompareTag("RockObstacle") || other.gameObject.CompareTag("PlatformObstacle"))
         {
             _rigidBody.AddForce(new Vector2(-50, 20), ForceMode.Impulse);
             _rigidBody.detectCollisions = false;
