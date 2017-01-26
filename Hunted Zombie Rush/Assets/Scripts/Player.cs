@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _jumpForce = 100f;
     [SerializeField] private AudioClip _sfxJump;
     [SerializeField] private AudioClip _sfxDeath;
+
     private Animator _anim;
     private Rigidbody _rigidBody;
     private bool _jump;
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     {
         Assert.IsNotNull(_sfxJump);
         Assert.IsNotNull(_sfxDeath);
+  
     }
 
     void Start()
@@ -30,7 +32,10 @@ public class Player : MonoBehaviour
     //0 means left
     protected void Update()
     {
+        //if game over is true return 
         if (GameManager.Instance.GameOver) return;
+
+        //if the mouse is not clicked then return 
         if (!Input.GetMouseButtonDown(0)) return;
         GameManager.Instance.PlayerStartedGame();
         _anim.Play("Jump");
@@ -53,6 +58,8 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+      
+       
         if (other.gameObject.CompareTag("RockObstacle") || other.gameObject.CompareTag("PlatformObstacle"))
         {
             _rigidBody.AddForce(new Vector2(-50, 20), ForceMode.Impulse);
@@ -60,5 +67,7 @@ public class Player : MonoBehaviour
             _audioSource.PlayOneShot(_sfxDeath);
             GameManager.Instance.PlayerCollided();
         }
+    
+       
     }
 }

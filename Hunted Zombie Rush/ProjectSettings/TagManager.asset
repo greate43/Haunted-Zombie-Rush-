@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RockObstacle
   - PlatformObstacle
+  - GoldCoin
   layers:
   - Default
   - TransparentFX

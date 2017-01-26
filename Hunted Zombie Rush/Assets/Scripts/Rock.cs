@@ -4,7 +4,7 @@ using UnityEngine;
 public class Rock : Objects
 {
     [SerializeField] Vector3 _topPosition;
-    [SerializeField] Vector3 _bottomPosition ;
+    [SerializeField] Vector3 _bottomPosition;
     [SerializeField] private float _speed = 3;
     // Use this for initialization
     void Start()
@@ -14,12 +14,11 @@ public class Rock : Objects
 
     protected override void Update()
     {
+        // if game has started and player active is true then move the rocks along the bridge 
         if (GameManager.Instance.ActivePlayer)
         {
             base.Update();
         }
-
-      
     }
 
     //move the rock up and down

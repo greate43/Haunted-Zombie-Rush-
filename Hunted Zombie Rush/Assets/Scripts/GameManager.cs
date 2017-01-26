@@ -1,11 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     private bool _playerActive;
     private bool _gameOver;
-    private bool _playerJumps;
+    private int _coinsCount;
+    [SerializeField] private Text _scoreText;
+
+
+    private void Start()
+    {
+        if (_scoreText != null) _scoreText.text = "Score : " + _coinsCount;
+    }
+
 
     public bool ActivePlayer
     {
@@ -17,12 +27,9 @@ public class GameManager : MonoBehaviour
         get { return _gameOver; }
     }
 
-    public bool PlayerCantJump
-    {
-        get { return _playerJumps; }
-    }
 
     private void Awake()
+
     {
         if (Instance == null)
         {
@@ -32,6 +39,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        Assert.IsNotNull(_scoreText);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -45,8 +54,10 @@ public class GameManager : MonoBehaviour
         _playerActive = true;
     }
 
-    public void PlayerCantJumpAboveScreen()
+
+    public void AddCoins(int coinsToAdd)
     {
-        _playerJumps = true;
+        _coinsCount += coinsToAdd;
+        if (_scoreText != null) _scoreText.text = "Score : " + _coinsCount;
     }
 }
