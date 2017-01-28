@@ -11,13 +11,14 @@ public class Player : MonoBehaviour
     private Rigidbody _rigidBody;
     private bool _jump;
     private AudioSource _audioSource;
+
+    private Coin _coins;
     // Use this for initialization
 
     private void Awake()
     {
         Assert.IsNotNull(_sfxJump);
         Assert.IsNotNull(_sfxDeath);
-  
     }
 
     void Start()
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
         _anim = GetComponent<Animator>();
         _rigidBody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        _coins = FindObjectOfType<Coin>();
     }
 
     // Update is called once per frame
@@ -58,8 +60,6 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-      
-       
         if (other.gameObject.CompareTag("RockObstacle") || other.gameObject.CompareTag("PlatformObstacle"))
         {
             _rigidBody.AddForce(new Vector2(-50, 20), ForceMode.Impulse);
@@ -67,7 +67,14 @@ public class Player : MonoBehaviour
             _audioSource.PlayOneShot(_sfxDeath);
             GameManager.Instance.PlayerCollided();
         }
-    
-       
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("GoldCoin"))
+        {
+            GameManager.Instance.AddCoins(_coins.GetGoldCoinValue);
+            other.gameObject.SetActive(false);
+        }
     }
 }

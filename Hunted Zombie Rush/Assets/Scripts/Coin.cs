@@ -1,22 +1,20 @@
-﻿using UnityEngine;
-using UnityEngine.Assertions;
+﻿using System;
+using UnityEngine;
 
 public class Coin : Objects
 {
     [SerializeField] private int _coinsValues = 1;
-    [SerializeField] private AudioClip _sfxCoin;
-    private AudioSource _audioSource;
-  
+    // [SerializeField] private GameObject _coinObject;
 
-    private void Awake()
+    public int GetGoldCoinValue
     {
-;
+        get { return _coinsValues; }
     }
+
 
     // Use this for initialization
     void Start()
     {
-        _audioSource = GetComponent<AudioSource>();
     }
 
     protected override void Update()
@@ -27,14 +25,11 @@ public class Coin : Objects
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*public void GenerateCoins(Vector3 startPosition)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            _audioSource.PlayOneShot(_sfxCoin);
-            GameManager.Instance.AddCoins(_coinsValues);
-
-            Destroy(gameObject);
-        }
+        GameObject coin1 = Instantiate(_coinObject);
+        coin1.transform.position=startPosition ;
+        coin1.SetActive(true);
     }
+    */
 }
