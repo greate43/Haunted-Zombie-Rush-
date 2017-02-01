@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
         _audioSource.PlayOneShot(_sfxJump);
         _rigidBody.useGravity = true;
         _jump = true;
+        
     }
 
     //fixed updates per sec
