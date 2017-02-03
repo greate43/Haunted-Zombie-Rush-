@@ -16,5 +16,6 @@ public class DestroyObject : MonoBehaviour
     }
     void OnDisable()
     {
+      CancelInvoke();
     }
 }

@@ -28,6 +28,9 @@ public class Rock : Objects
         {
             Vector3 direction = target.y == _topPosition.y ? Vector3.up : Vector3.down;
             transform.localPosition += direction * (_speed * Time.deltaTime);
+
+     
+
             yield return null;
         }
 

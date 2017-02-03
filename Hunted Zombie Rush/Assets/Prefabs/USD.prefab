@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9500000}
   - component: {fileID: 54942015347204664}
   - component: {fileID: 136955654412248310}
+  - component: {fileID: 114140634824144478}
   m_Layer: 0
   m_Name: USD
   m_TagString: GoldCoin
@@ -110,6 +111,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114140634824144478
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb434d2eae074504e8b65b5051c7df4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectSpeed: 2
+  _resetPosition: -21.65
+  _startPosition: 59.6
 --- !u!136 &136955654412248310
 CapsuleCollider:
   m_ObjectHideFlags: 1

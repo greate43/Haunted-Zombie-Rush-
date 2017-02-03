@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
@@ -44,7 +43,7 @@ public class ObjectPooler : MonoBehaviour
         if (_willGrow)
         {
             GameObject obj = Instantiate(_pooledObject);
-            obj.SetActive(false);
+           // obj.SetActive(false);
             _pooledObjects.Add(obj);
             return obj;
         }

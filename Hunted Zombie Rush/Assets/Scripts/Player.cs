@@ -74,8 +74,12 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("GoldCoin"))
         {
-            GameManager.Instance.AddCoins(_coins.GetGoldCoinValue);
-            other.gameObject.SetActive(false);
+            if (_coins!=null)
+            {
+                GameManager.Instance.AddCoins(_coins.GetGoldCoinValue);
+                other.gameObject.SetActive(false);
+            }
+     
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Coin : Objects
+public class Coin : MonoBehaviour
 {
     [SerializeField] private int _coinsValues = 1;
 
@@ -18,18 +16,7 @@ public class Coin : Objects
     }
 
 
-    protected override void Update()
-    {
-        if (GameManager.Instance.ActivePlayer)
-        {
-            base.Update();
-
-            //coin generator
-            CoinGenerator.Current.GenerateCoins(new Vector3(transform.position.x, transform.position.y ,
-               transform.position.z));
-        }
-    }
-
+   
  
 
    
