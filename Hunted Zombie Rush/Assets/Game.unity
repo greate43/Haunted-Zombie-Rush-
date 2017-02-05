@@ -681,6 +681,18 @@ Prefab:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e96b5b1fe736b7e4f9452b68ef5b1bd0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e96b5b1fe736b7e4f9452b68ef5b1bd0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400002, guid: e96b5b1fe736b7e4f9452b68ef5b1bd0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e96b5b1fe736b7e4f9452b68ef5b1bd0, type: 3}
   m_IsPrefabParent: 0
@@ -789,7 +801,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1274681795}
   - component: {fileID: 1274681796}
-  - component: {fileID: 1274681797}
   m_Layer: 0
   m_Name: CoinGenerator
   m_TagString: Untagged
@@ -822,19 +833,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df8f68bd3a499bb49b474347af82494d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _distanceBetweenCoins: 2.01
---- !u!114 &1274681797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1274681794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04229753c5aa1c94b8907640af78cf22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _destoryTime: 2
+  _distanceBetweenCoins: 1.5
+  _randomCoinThreshhold: 1
 --- !u!1 &1278034098 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100014, guid: e96b5b1fe736b7e4f9452b68ef5b1bd0, type: 3}
@@ -1003,7 +1003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pooledObject: {fileID: 100000, guid: 8645a0f5dbe846a4bae22a67d2144035, type: 2}
   _willGrow: 1
-  _pooledAmount: 3
+  _pooledAmount: 15
 --- !u!114 &1449467918
 MonoBehaviour:
   m_ObjectHideFlags: 0

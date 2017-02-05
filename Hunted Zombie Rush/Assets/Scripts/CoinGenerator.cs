@@ -4,6 +4,7 @@ public class CoinGenerator : MonoBehaviour
 {
     [SerializeField] private float _distanceBetweenCoins = 1.5f;
     public static CoinGenerator Current;
+    [SerializeField] private float _randomCoinThreshhold = 0.1f;
 
     void Awake()
     {
@@ -13,15 +14,25 @@ public class CoinGenerator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
     }
 
     void Update()
     {
+        if (Physics.CheckSphere(
+            new Vector3(transform.position.x + 1f, transform.position.y + 1f, transform.position.z),
+            0.62f))
+        {
+            // found something
+            print("found something");
+        }
+        else if (Random.Range(0, 1000) < _randomCoinThreshhold)
+        {
+            GenerateCoins(new Vector3(transform.position.x + 2f, transform.position.y + 1f, transform.position.z));
+        }
 
-        GenerateCoins(new Vector3(transform.position.x, transform.position.y+1f,transform.position.z));
-     // CoinGenerator.Current.GenerateCoins(new Vector3(transform.position.x, transform.position.y,
-     //transform.position.z));
+
+        // CoinGenerator.Current.GenerateCoins(new Vector3(transform.position.x, transform.position.y,
+        //transform.position.z));
     }
 
     // Update is called once per frame
@@ -35,12 +46,14 @@ public class CoinGenerator : MonoBehaviour
 
         GameObject coin2 = ObjectPooler.Current.GetPooledObject();
         if (coin2 == null) return;
-        coin2.transform.position = new Vector3(startPosition.x - _distanceBetweenCoins, startPosition.y + _distanceBetweenCoins, startPosition.z);
+        coin2.transform.position = new Vector3(startPosition.x - _distanceBetweenCoins,
+            startPosition.y + _distanceBetweenCoins, startPosition.z);
         coin2.SetActive(true);
 
         GameObject coin3 = ObjectPooler.Current.GetPooledObject();
         if (coin3 == null) return;
-        coin3.transform.position = new Vector3(startPosition.x + _distanceBetweenCoins, startPosition.y -_distanceBetweenCoins, startPosition.z);
+        coin3.transform.position = new Vector3(startPosition.x + 20f, startPosition.y - _distanceBetweenCoins,
+            startPosition.z);
         coin3.SetActive(true);
     }
 }

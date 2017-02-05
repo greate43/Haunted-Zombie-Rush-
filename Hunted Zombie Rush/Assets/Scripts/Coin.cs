@@ -10,14 +10,6 @@ public class Coin : MonoBehaviour
         get { return _coinsValues; }
     }
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
-
-   
- 
 
    
 }
