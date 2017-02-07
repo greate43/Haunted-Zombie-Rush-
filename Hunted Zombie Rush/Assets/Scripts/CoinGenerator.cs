@@ -3,13 +3,10 @@
 public class CoinGenerator : MonoBehaviour
 {
     [SerializeField] private float _distanceBetweenCoins = 1.5f;
-    public static CoinGenerator Current;
-    [SerializeField] private float _randomCoinThreshhold = 0.1f;
+  
+    [SerializeField] private float _randomCoinThreshhold = 2.5f;
 
-    void Awake()
-    {
-        Current = this;
-    }
+    
 
     // Use this for initialization
     void Start()

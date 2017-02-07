@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class MoveCoin : Objects {
+﻿public class MoveCoin : Objects {
 
 	// Use this for initialization
 	void Start () {

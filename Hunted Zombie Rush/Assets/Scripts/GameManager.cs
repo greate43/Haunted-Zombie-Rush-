@@ -9,12 +9,13 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
     private int _coinsCount;
     [SerializeField] private Text _scoreText;
+    
     [SerializeField] private AudioClip _sfxCoin;
     private AudioSource _audioSource;
   
     private void Start()
     {
-        if (_scoreText != null) _scoreText.text = "Score : " + _coinsCount;
+        if (_scoreText != null) _scoreText.text = "" + _coinsCount;
         _audioSource = GetComponent<AudioSource>();
  
     }
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
         }
 
         Assert.IsNotNull(_scoreText);
+        
         Assert.IsNotNull(_sfxCoin);
         DontDestroyOnLoad(gameObject);
     }
@@ -63,7 +65,12 @@ public class GameManager : MonoBehaviour
     {
         _audioSource.PlayOneShot(_sfxCoin);
         _coinsCount += coinsToAdd;
-        if (_scoreText != null) _scoreText.text = "Score : " + _coinsCount;
-       
+        if (_scoreText != null) _scoreText.text = ""+ _coinsCount;
+      
+    }
+
+    public int GetGetHighScore()
+    {
+        return _coinsCount;
     }
 }
