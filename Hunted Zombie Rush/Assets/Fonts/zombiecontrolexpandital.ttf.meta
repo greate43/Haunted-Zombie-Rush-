@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 02d518935b65cd74e84da6c6e266fa8d
+timeCreated: 1486802528
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Zombie Control Expnaded Italic
+  fontNames:
+  - Zombie Control Expnaded Italic
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

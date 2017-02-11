@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
         _playerActive = true;
     }
 
+  
 
     public void AddCoins(int coinsToAdd)
     {
