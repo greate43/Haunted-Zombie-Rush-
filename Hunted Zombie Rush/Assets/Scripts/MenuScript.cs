@@ -7,7 +7,29 @@ public class MenuScript : MonoBehaviour
     [SerializeField] private Canvas _quitMenu;
     [SerializeField] private Button _playText;
     [SerializeField] private Button _exitText;
+    private float _saveVolume;
+    public Slider VolmueSlider;
+
+    void Awake()
+    {
+        float getVolumeState = PlayerPrefs.GetFloat("Save Volume");
+        if (PlayerPrefs.HasKey("Save Volume"))
+        {
+            VolmueSlider.value = getVolumeState;
+            AudioListener.volume = getVolumeState;
+        }
+        else
+        {
+            VolmueSlider.value = 0.6f;
+            AudioListener.volume = 0.6f;
+        }
+//        PlayerPrefs.DeleteKey("Save Volume");
+
+    }
+
     // Use this for initialization
+
+
     void Start()
     {
         _quitMenu = _quitMenu.GetComponent<Canvas>();
@@ -18,8 +40,12 @@ public class MenuScript : MonoBehaviour
         _exitText.enabled = true;
     }
 
-    void Update()
+    public void SetMasterVolume(float value)
     {
+     
+        AudioListener.volume = VolmueSlider.value;
+        _saveVolume = VolmueSlider.value;
+        PlayerPrefs.SetFloat("Save Volume",_saveVolume);
     }
 
 
