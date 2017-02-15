@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
         _coins = FindObjectOfType<CoinValue>();
-        StoreHighscore(GameManager.Instance.GetGetHighScore());
+        StoreHighscore(GameManager.Instance.GetHighScore());
     }
 
     // Update is called once per frame
@@ -41,17 +41,25 @@ public class Player : MonoBehaviour
         //if game over is true return and save the score
         if (GameManager.Instance.GameOver)
         {
-            StoreHighscore(GameManager.Instance.GetGetHighScore());
+            StoreHighscore(GameManager.Instance.GetHighScore());
             return;
         }
-//        if (Input.touchCount > 0 &&Input.GetTouch(0).phase == TouchPhase.Moved)
-//        {
-//            // Get movement of the finger since last frame
-//          //  Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-//          print("screen tapped");
-//        }
+  
+
+        StartPlaying();
+
+        if (GameManager.Instance.GameRestarted)
+        {
+            _rigidBody.detectCollisions = true;
+        
+        }
+
+    }
+
+    void StartPlaying()
+    {
         //if the mouse is not clicked then return 
-        if (!Input.GetMouseButtonDown(0)&&!Input.GetKeyDown("space")) return;
+        if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown("space")) return;
         GameManager.Instance.PlayerStartedGame();
         _anim.Play("Jump");
         _audioSource.PlayOneShot(_sfxJump);
@@ -105,6 +113,6 @@ public class Player : MonoBehaviour
 
 //    private void OnApplicationQuit()
 //    {
-//        StoreHighscore(GameManager.Instance.GetGetHighScore());
+//        StoreHighscore(GameManager.Instance.GetHighScore());
 //    }
 }
