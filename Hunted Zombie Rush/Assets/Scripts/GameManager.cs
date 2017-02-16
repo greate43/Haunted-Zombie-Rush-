@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     private int _coinsCount;
     private bool _gameRestarted;
 
-    [SerializeField] private Text _scoreText;
+
     private bool _audioState = true;
     [SerializeField] private AudioClip _sfxCoin;
     private AudioSource _audioSource;
@@ -21,21 +21,17 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (_scoreText != null) _scoreText.text = "" + _coinsCount;
-       
         _audioSource = GetComponent<AudioSource>();
         _audioListener = GetComponent<AudioListener>();
-     
+        _coinsCount = 0;
     }
 
     public void Update()
     {
         if (_audioState == false)
         {
-            
             _audioListener.enabled = true;
             _audioState = true;
-           
         }
     }
 
@@ -48,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         get { return _gameRestarted; }
     }
+
     public bool GameOver
     {
         get { return _gameOver; }
@@ -66,11 +63,10 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Assert.IsNotNull(_scoreText);
 
         Assert.IsNotNull(_sfxCoin);
 
-       
+
         DontDestroyOnLoad(gameObject);
     }
 
@@ -84,52 +80,49 @@ public class GameManager : MonoBehaviour
         _playerActive = true;
     }
 
-    
 
     public void AddCoins(int coinsToAdd)
     {
         _audioSource.PlayOneShot(_sfxCoin);
         _coinsCount += coinsToAdd;
-        if (_scoreText != null) _scoreText.text = "" + _coinsCount;
     }
 
-    public int GetHighScore()
+    public int GetScore()
     {
         return _coinsCount;
     }
 
     public void BackToMainMenu()
     {
-      
         if (_audioState)
         {
-          
             _audioListener.enabled = false;
             _audioState = false;
         }
+
         _gameOver = false;
         _playerActive = false;
+        _coinsCount = 0;
         SceneManager.LoadScene(0);
 
-
-
+        OnPlayAgainPressed();
     }
 
-    
+
     public void OnPlayAgainPressed()
     {
         _gameRestarted = true;
     }
+
     public void PlayAgain()
     {
         if (_gameOver)
         {
             _gameOver = false;
             _playerActive = false;
-            OnPlayAgainPressed();
-
+            _coinsCount = 0;
         }
         SceneManager.LoadScene(1);
-  
+        OnPlayAgainPressed();
     }
 }

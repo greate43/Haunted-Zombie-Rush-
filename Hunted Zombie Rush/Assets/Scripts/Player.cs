@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _jumpForce = 100f;
     [SerializeField] private AudioClip _sfxJump;
     [SerializeField] private AudioClip _sfxDeath;
-
+    [SerializeField] private Text _scoreText;
     private Animator _anim;
     private Rigidbody _rigidBody;
     private bool _jump;
@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
         Assert.IsNotNull(_highScoreText);
         Assert.IsNotNull(_sfxJump);
         Assert.IsNotNull(_sfxDeath);
+        Assert.IsNotNull(_scoreText);
     }
 
     void Start()
@@ -30,7 +31,10 @@ public class Player : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
         _coins = FindObjectOfType<CoinValue>();
-        StoreHighscore(GameManager.Instance.GetHighScore());
+
+        StoreHighscore(GameManager.Instance.GetScore());
+
+        if (_scoreText != null) _scoreText.text = "" + GameManager.Instance.GetScore();
     }
 
     // Update is called once per frame
@@ -41,19 +45,20 @@ public class Player : MonoBehaviour
         //if game over is true return and save the score
         if (GameManager.Instance.GameOver)
         {
-            StoreHighscore(GameManager.Instance.GetHighScore());
+            StoreHighscore(GameManager.Instance.GetScore());
             return;
         }
-  
+
 
         StartPlaying();
 
         if (GameManager.Instance.GameRestarted)
         {
             _rigidBody.detectCollisions = true;
-        
         }
 
+
+        if (_scoreText != null) _scoreText.text = "" + GameManager.Instance.GetScore();
     }
 
     void StartPlaying()
@@ -113,6 +118,6 @@ public class Player : MonoBehaviour
 
 //    private void OnApplicationQuit()
 //    {
-//        StoreHighscore(GameManager.Instance.GetHighScore());
+//        StoreHighscore(GameManager.Instance.GetScore());
 //    }
 }
