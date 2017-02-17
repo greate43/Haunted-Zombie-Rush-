@@ -9,7 +9,4 @@ public class CoinValue : MonoBehaviour
     {
         get { return _coinsValues; }
     }
-
-
-   
 }

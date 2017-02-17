@@ -4,29 +4,27 @@ public class DestroyObjects : MonoBehaviour
 
 
 {
-
-
     public static DestroyObjects Current;
+
+    [SerializeField] private float _destoryTime = 1f;
+
     private void Awake()
     {
         Current = this;
     }
 
-    [SerializeField] private float _destoryTime = 1f;
-
     public void OnEnable()
     {
-        Invoke("Destroy",_destoryTime);
+        Invoke("Destroy", _destoryTime);
     }
 
     public void Destroy()
     {
         gameObject.SetActive(false);
     }
-  public  void OnDisable()
-    {
-      CancelInvoke();
-    }
 
-  
+    public void OnDisable()
+    {
+        CancelInvoke();
+    }
 }

@@ -1,18 +1,27 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuScript : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private Canvas _quitMenu;
-    [SerializeField] private Button _playText;
     [SerializeField] private Button _exitText;
+    [SerializeField] private GameObject _mainPanel;
+    [SerializeField] private GameObject _options;
+    [SerializeField] private Button _playText;
+    [SerializeField] private Canvas _quitMenu;
     private float _saveVolume;
+    private bool _menuState = true;
     public Slider VolmueSlider;
 
-    void Awake()
+    private void Awake()
     {
-        float getVolumeState = PlayerPrefs.GetFloat("Save Volume");
+        Assert.IsNotNull(_quitMenu);
+        Assert.IsNotNull(_mainPanel);
+        Assert.IsNotNull(_options);
+
+
+        var getVolumeState = PlayerPrefs.GetFloat("Save Volume");
         if (PlayerPrefs.HasKey("Save Volume"))
         {
             VolmueSlider.value = getVolumeState;
@@ -24,28 +33,31 @@ public class MenuScript : MonoBehaviour
             AudioListener.volume = 0.6f;
         }
 //        PlayerPrefs.DeleteKey("Save Volume");
-
     }
 
-    // Use this for initialization
 
-
-    void Start()
+    private void Start()
     {
         _quitMenu = _quitMenu.GetComponent<Canvas>();
         _playText = _playText.GetComponent<Button>();
         _exitText = _exitText.GetComponent<Button>();
         _quitMenu.enabled = false;
-        _playText.enabled = true;
-        _exitText.enabled = true;
     }
 
-    public void SetMasterVolume(float value)
+    private void Update()
     {
-     
+        if (Input.GetKeyDown(KeyCode.Escape))
+            if (_menuState)
+                OnExitPressed();
+            else
+                ReturnToMenu();
+    }
+
+    public void SetMasterVolume(float v)
+    {
         AudioListener.volume = VolmueSlider.value;
         _saveVolume = VolmueSlider.value;
-        PlayerPrefs.SetFloat("Save Volume",_saveVolume);
+        PlayerPrefs.SetFloat("Save Volume", _saveVolume);
     }
 
 
@@ -74,5 +86,17 @@ public class MenuScript : MonoBehaviour
         Application.Quit();
     }
 
+    public void GoToOptions()
+    {
+        _mainPanel.SetActive(false);
+        _options.SetActive(true);
+        _menuState = false;
+    }
 
+    public void ReturnToMenu()
+    {
+        _options.SetActive(false);
+        _mainPanel.SetActive(true);
+        _menuState = true;
+    }
 }

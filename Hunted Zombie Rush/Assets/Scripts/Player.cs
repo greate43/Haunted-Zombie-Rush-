@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour 
 {
-    [SerializeField] private float _jumpForce = 100f;
-    [SerializeField] private AudioClip _sfxJump;
-    [SerializeField] private AudioClip _sfxDeath;
-    [SerializeField] private Text _scoreText;
     private Animator _anim;
-    private Rigidbody _rigidBody;
-    private bool _jump;
     private AudioSource _audioSource;
 
     private CoinValue _coins;
     [SerializeField] private Text _highScoreText;
+    private bool _jump;
+    [SerializeField] private float _jumpForce = 100f;
+    private Rigidbody _rigidBody;
+    [SerializeField] private Text _scoreText;
+    [SerializeField] private AudioClip _sfxDeath;
+    [SerializeField] private AudioClip _sfxJump;
     // Use this for initialization
 
     private void Awake()
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour
         Assert.IsNotNull(_scoreText);
     }
 
-    void Start()
+    private void Start()
     {
         _anim = GetComponent<Animator>();
         _rigidBody = GetComponent<Rigidbody>();
@@ -42,34 +43,39 @@ public class Player : MonoBehaviour
     //0 means left
     protected void Update()
     {
+
         //if game over is true return and save the score
         if (GameManager.Instance.GameOver)
         {
             StoreHighscore(GameManager.Instance.GetScore());
             return;
         }
-
-
+//
+    
         StartPlaying();
 
         if (GameManager.Instance.GameRestarted)
-        {
             _rigidBody.detectCollisions = true;
-        }
 
 
         if (_scoreText != null) _scoreText.text = "" + GameManager.Instance.GetScore();
     }
 
-    void StartPlaying()
+    private void StartPlaying()
     {
-        //if the mouse is not clicked then return 
-        if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown("space")) return;
-        GameManager.Instance.PlayerStartedGame();
-        _anim.Play("Jump");
-        _audioSource.PlayOneShot(_sfxJump);
-        _rigidBody.useGravity = true;
-        _jump = true;
+     
+   
+           
+            //if the mouse is not clicked then return 
+            if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown("space") && !Input.GetKeyDown("up")) return;
+            GameManager.Instance.PlayerStartedGame();
+            _anim.Play("Jump");
+            _audioSource.PlayOneShot(_sfxJump);
+          
+            _rigidBody.useGravity = true;
+            _jump = true;
+      
+       
     }
 
     //fixed updates per sec
@@ -98,26 +104,27 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("GoldCoin"))
-        {
             if (_coins != null)
             {
                 GameManager.Instance.AddCoins(_coins.GetGoldCoinValue);
                 other.gameObject.SetActive(false);
             }
-        }
     }
 
     private void StoreHighscore(int newHighscore)
     {
-        int oldHighscore = PlayerPrefs.GetInt("highscore", 0);
+        var oldHighscore = PlayerPrefs.GetInt("highscore", 0);
         if (_highScoreText != null) _highScoreText.text = "" + oldHighscore;
 
         if (newHighscore > oldHighscore)
             PlayerPrefs.SetInt("highscore", newHighscore);
     }
 
-//    private void OnApplicationQuit()
-//    {
+ 
+
+
 //        StoreHighscore(GameManager.Instance.GetScore());
-//    }
+//    {
+
+//    private void OnApplicationQuit()
 }

@@ -1,23 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    private bool _playerActive;
-    private bool _gameOver;
-    private int _coinsCount;
-    private bool _gameRestarted;
-
-
-    private bool _audioState = true;
-    [SerializeField] private AudioClip _sfxCoin;
-    private AudioSource _audioSource;
 
     private AudioListener _audioListener;
+    private AudioSource _audioSource;
 
+    private int _coinsCount;
+    [SerializeField] private AudioClip _sfxCoin;
+
+    private bool _audioState = true;
+
+    public bool ActivePlayer { get; private set; }
+
+    public bool GameRestarted { get; private set; }
+
+    public bool GameOver { get; private set; }
+
+    public bool GamePaused { get; private set; }
 
     private void Start()
     {
@@ -35,33 +38,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool ActivePlayer
-    {
-        get { return _playerActive; }
-    }
-
-    public bool GameRestarted
-    {
-        get { return _gameRestarted; }
-    }
-
-    public bool GameOver
-    {
-        get { return _gameOver; }
-    }
-
 
     private void Awake()
 
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else if (Instance != null)
-        {
             Destroy(gameObject);
-        }
 
 
         Assert.IsNotNull(_sfxCoin);
@@ -72,14 +56,18 @@ public class GameManager : MonoBehaviour
 
     public void PlayerCollided()
     {
-        _gameOver = true;
+        GameOver = true;
     }
 
     public void PlayerStartedGame()
     {
-        _playerActive = true;
+        ActivePlayer = true;
     }
 
+    public int GetScore()
+    {
+        return _coinsCount;
+    }
 
     public void AddCoins(int coinsToAdd)
     {
@@ -87,10 +75,6 @@ public class GameManager : MonoBehaviour
         _coinsCount += coinsToAdd;
     }
 
-    public int GetScore()
-    {
-        return _coinsCount;
-    }
 
     public void BackToMainMenu()
     {
@@ -100,8 +84,8 @@ public class GameManager : MonoBehaviour
             _audioState = false;
         }
 
-        _gameOver = false;
-        _playerActive = false;
+        GameOver = false;
+        ActivePlayer = false;
         _coinsCount = 0;
         SceneManager.LoadScene(0);
 
@@ -111,18 +95,31 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayAgainPressed()
     {
-        _gameRestarted = true;
+        GameRestarted = true;
     }
 
     public void PlayAgain()
     {
-        if (_gameOver)
+        if (GameOver)
         {
-            _gameOver = false;
-            _playerActive = false;
+            GameOver = false;
+            ActivePlayer = false;
             _coinsCount = 0;
         }
         SceneManager.LoadScene(1);
         OnPlayAgainPressed();
+    }
+
+
+    public void GameIsPause()
+    {
+        GamePaused = true;
+        Time.timeScale = 0;
+    }
+
+    public void GameIsResumed()
+    {
+        GamePaused = false;
+        Time.timeScale = 1;
     }
 }
