@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
         OnPlayAgainPressed();
     }
-
+    
 
     public void GameIsPause()
     {
@@ -121,5 +121,11 @@ public class GameManager : MonoBehaviour
     {
         GamePaused = false;
         Time.timeScale = 1;
+  
+    }
+
+    public void QuitTheGame()
+    {
+        Application.Quit();
     }
 }

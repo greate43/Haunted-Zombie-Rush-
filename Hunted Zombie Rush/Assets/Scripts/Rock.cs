@@ -24,7 +24,7 @@ public class Rock : Objects
     {
         while (Mathf.Abs((target - transform.localPosition).y) > 0.20f)
         {
-            var direction = target.y == _topPosition.y ? Vector3.up : Vector3.down;
+            var direction = target.y.Equals(_topPosition.y) ? Vector3.up : Vector3.down;
             transform.localPosition += direction * (_speed * Time.deltaTime);
 
 
@@ -33,7 +33,7 @@ public class Rock : Objects
 
         yield return new WaitForSeconds(0.5f);
 
-        var newTarget = target.y == _topPosition.y ? _bottomPosition : _topPosition;
+        var newTarget = target.y.Equals(_topPosition.y)  ? _bottomPosition : _topPosition;
 
         StartCoroutine(Move(newTarget));
     }
