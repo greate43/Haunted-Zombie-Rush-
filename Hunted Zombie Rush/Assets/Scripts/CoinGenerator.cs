@@ -21,7 +21,9 @@ public class CoinGenerator : MonoBehaviour
             //  print("found something");
         }
         else if (Random.Range(0, 1000) < _randomCoinThreshhold)
+        {
             GenerateCoins(new Vector3(transform.position.x + 2f, transform.position.y + 1f, transform.position.z));
+        }
 
 
         // CoinGenerator.Current.GenerateCoins(new Vector3(transform.position.x, transform.position.y,

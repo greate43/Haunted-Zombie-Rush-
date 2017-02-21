@@ -1,17 +1,19 @@
-﻿using UnityEngine;
+﻿using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using UnityEngine.SocialPlatforms;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Button _exitText;
     [SerializeField] private GameObject _mainPanel;
+    private bool _menuState = true;
     [SerializeField] private GameObject _options;
     [SerializeField] private Button _playText;
     [SerializeField] private Canvas _quitMenu;
     private float _saveVolume;
-    private bool _menuState = true;
     public Slider VolmueSlider;
 
     private void Awake()
@@ -38,6 +40,22 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+
+//        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+//        .RequireGooglePlus()
+//        .Build();
+//
+//        PlayGamesPlatform.InitializeInstance(config);
+        // recommended for debugging:
+        PlayGamesPlatform.DebugLogEnabled = true;
+        // Activate the Google Play Games platform
+        PlayGamesPlatform.Activate();
+
+        Social.localUser.Authenticate((bool success) => {
+            // handle success or failure
+        });
+
+
         _quitMenu = _quitMenu.GetComponent<Canvas>();
         _playText = _playText.GetComponent<Button>();
         _exitText = _exitText.GetComponent<Button>();
@@ -80,9 +98,7 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(1);
         if (Time.timeScale.Equals(0))
-        {
             Time.timeScale = 1;
-        }
     }
 
     public void GameExit()
@@ -103,4 +119,10 @@ public class MainMenu : MonoBehaviour
         _mainPanel.SetActive(true);
         _menuState = true;
     }
+
+    public void ShowAchivements()
+    {
+       
+    }
+
 }

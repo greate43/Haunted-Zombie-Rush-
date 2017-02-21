@@ -6,12 +6,12 @@ public class Player : MonoBehaviour
 {
     private Animator _anim;
     private AudioSource _audioSource;
-    private Rigidbody _rigidBody;
     private CoinValue _coins;
-    private bool _jump;
 
     [SerializeField] private Text _highScoreText;
+    private bool _jump;
     [SerializeField] private float _jumpForce = 100f;
+    private Rigidbody _rigidBody;
     [SerializeField] private Text _scoreText;
     [SerializeField] private AudioClip _sfxDeath;
     [SerializeField] private AudioClip _sfxJump;
@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
     //0 means left
     protected void Update()
     {
-
         //if game over is true return and save the score
         if (GameManager.Instance.GameOver)
         {
@@ -50,7 +49,7 @@ public class Player : MonoBehaviour
             return;
         }
 //
-         StartPlaying();
+        StartPlaying();
         if (GameManager.Instance.GameRestarted)
             _rigidBody.detectCollisions = true;
 
@@ -60,19 +59,16 @@ public class Player : MonoBehaviour
 
     private void StartPlaying()
     {
-
 //        if (!EventSystem.current.IsPointerOverGameObject())
 //            return;
-            //if the mouse is not clicked then return 
-            if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown("space") && !Input.GetKeyDown("up")) return;
-            GameManager.Instance.PlayerStartedGame();
-            _anim.Play("Jump");
-            _audioSource.PlayOneShot(_sfxJump);
-          
-            _rigidBody.useGravity = true;
-            _jump = true;
-      
-       
+        //if the mouse is not clicked then return 
+        if (!Input.GetMouseButtonDown(0) && !Input.GetKeyDown("space") && !Input.GetKeyDown("up")) return;
+        GameManager.Instance.PlayerStartedGame();
+        _anim.Play("Jump");
+        _audioSource.PlayOneShot(_sfxJump);
+
+        _rigidBody.useGravity = true;
+        _jump = true;
     }
 
     //fixed updates per sec
@@ -86,7 +82,7 @@ public class Player : MonoBehaviour
             _rigidBody.AddForce(new Vector2(0, _jumpForce), ForceMode.Impulse);
         }
     }
-  
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("RockObstacle") || other.gameObject.CompareTag("PlatformObstacle"))
@@ -116,6 +112,4 @@ public class Player : MonoBehaviour
         if (newHighscore > oldHighscore)
             PlayerPrefs.SetInt("highscore", newHighscore);
     }
-
-
 }

@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: 37026253fd690cb4db7cfa7394699c47
-timeCreated: 1485441578
+guid: e1549e8585fe80749bb6d9e9116c7aa7
+timeCreated: 1487669435
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - _sfxCoin: {fileID: 8300000, guid: 6452cdc95305a7444a228f1e7c7c4cd0, type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

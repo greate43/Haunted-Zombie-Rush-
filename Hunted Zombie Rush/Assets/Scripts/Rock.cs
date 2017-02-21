@@ -33,7 +33,7 @@ public class Rock : Objects
 
         yield return new WaitForSeconds(0.5f);
 
-        var newTarget = target.y.Equals(_topPosition.y)  ? _bottomPosition : _topPosition;
+        var newTarget = target.y.Equals(_topPosition.y) ? _bottomPosition : _topPosition;
 
         StartCoroutine(Move(newTarget));
     }

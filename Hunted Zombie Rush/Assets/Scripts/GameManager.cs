@@ -9,10 +9,10 @@ public class GameManager : MonoBehaviour
     private AudioListener _audioListener;
     private AudioSource _audioSource;
 
+    private bool _audioState = true;
+
     private int _coinsCount;
     [SerializeField] private AudioClip _sfxCoin;
-
-    private bool _audioState = true;
 
     public bool ActivePlayer { get; private set; }
 
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(1);
         OnPlayAgainPressed();
     }
-    
+
 
     public void GameIsPause()
     {
@@ -121,7 +121,6 @@ public class GameManager : MonoBehaviour
     {
         GamePaused = false;
         Time.timeScale = 1;
-  
     }
 
     public void QuitTheGame()
