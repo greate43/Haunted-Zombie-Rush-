@@ -1,11 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GamePauseManager : MonoBehaviour
 {
     [SerializeField] private GameObject _pauseMenu;
     [SerializeField] private GameObject _play;
     [SerializeField] private GameObject _pause;
-      
+
+
+    void Update()
+    {
+        if (GameManager.Instance.GameOver)
+        {
+            _pause.SetActive(false);
+            _play.SetActive(false);
+            _pauseMenu.SetActive(false);
+        } 
+    }
 
     public void GamePaused()
     {
@@ -18,9 +29,10 @@ public class GamePauseManager : MonoBehaviour
     public void GameResumed()
     {
         GameManager.Instance.GameIsResumed();
-        _play.SetActive(false);
-        _pauseMenu.SetActive(false);
+      
         _pause.SetActive(true);
+        _pauseMenu.SetActive(false);
+        _play.SetActive(false);
     }
 
     public void GameQuit()
@@ -35,4 +47,6 @@ public class GamePauseManager : MonoBehaviour
           
         GameManager.Instance.BackToMainMenu();
     }
+
+   
 }

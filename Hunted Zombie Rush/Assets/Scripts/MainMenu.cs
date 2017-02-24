@@ -1,10 +1,8 @@
-﻿using GooglePlayGames;
-using GooglePlayGames.BasicApi;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.SocialPlatforms;
+
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Button _exitText;
@@ -46,14 +44,23 @@ public class MainMenu : MonoBehaviour
 //        .Build();
 //
 //        PlayGamesPlatform.InitializeInstance(config);
-        // recommended for debugging:
-        PlayGamesPlatform.DebugLogEnabled = true;
-        // Activate the Google Play Games platform
-        PlayGamesPlatform.Activate();
+//        // recommended for debugging:
+//        PlayGamesPlatform.DebugLogEnabled = true;
+//        // Activate the Google Play Games platform
+//        PlayGamesPlatform.Activate();
 
-        Social.localUser.Authenticate((bool success) => {
-            // handle success or failure
-        });
+//        Social.localUser.Authenticate(success => {
+//            // handle success or failure
+//
+//            if (!success)
+//            {
+//                Debug.Log("couldn't login "+success);
+//            }
+//            else
+//            {
+//                Debug.Log(""+success);
+//            }
+//        });
 
 
         _quitMenu = _quitMenu.GetComponent<Canvas>();
