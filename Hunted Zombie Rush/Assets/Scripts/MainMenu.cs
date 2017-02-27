@@ -20,6 +20,10 @@ public class MainMenu : MonoBehaviour
         Assert.IsNotNull(_mainPanel);
         Assert.IsNotNull(_options);
 
+//        // recommended for debugging:
+//        PlayGamesPlatform.DebugLogEnabled = true;
+//        // Activate the Google Play Games platform
+//        PlayGamesPlatform.Activate();
 
         var getVolumeState = PlayerPrefs.GetFloat("Save Volume");
         if (PlayerPrefs.HasKey("Save Volume"))
@@ -39,34 +43,35 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
 
-//        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-//        .RequireGooglePlus()
-//        .Build();
-//
-//        PlayGamesPlatform.InitializeInstance(config);
-//        // recommended for debugging:
-//        PlayGamesPlatform.DebugLogEnabled = true;
-//        // Activate the Google Play Games platform
-//        PlayGamesPlatform.Activate();
-
-//        Social.localUser.Authenticate(success => {
-//            // handle success or failure
-//
-//            if (!success)
-//            {
-//                Debug.Log("couldn't login "+success);
-//            }
-//            else
-//            {
-//                Debug.Log(""+success);
-//            }
-//        });
-
-
+    
+   
         _quitMenu = _quitMenu.GetComponent<Canvas>();
         _playText = _playText.GetComponent<Button>();
         _exitText = _exitText.GetComponent<Button>();
         _quitMenu.enabled = false;
+//        if (!Social.localUser.authenticated)
+//        {
+//            Social.localUser.Authenticate((bool success) => {
+//                if (success)
+//                {
+//                    //some code here
+//                    Debug.Log("" + success);
+//                }
+//                else
+//                {
+//                    //some code here
+//                    Debug.Log("couldn't login " + success);
+//                }
+//            }); //true means no login prompt will show up
+//        }
+//        else
+//        {
+//            Debug.Log("Already signed in");
+//        }
+//
+
+       
+
     }
 
     private void Update()
@@ -115,6 +120,7 @@ public class MainMenu : MonoBehaviour
 
     public void GoToOptions()
     {
+
         _mainPanel.SetActive(false);
         _options.SetActive(true);
         _menuState = false;
