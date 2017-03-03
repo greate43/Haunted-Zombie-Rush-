@@ -108,7 +108,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
         if (Time.timeScale.Equals(0))
             Time.timeScale = 1;
     }

@@ -7,14 +7,18 @@ public class Player : MonoBehaviour
     private Animator _anim;
     private AudioSource _audioSource;
     private CoinValue _coins;
+    private bool _jump;
+    private Rigidbody _rigidBody;
+
+
+
 
     [SerializeField] private Text _highScoreText;
-    private bool _jump;
     [SerializeField] private float _jumpForce = 100f;
-    private Rigidbody _rigidBody;
     [SerializeField] private Text _scoreText;
     [SerializeField] private AudioClip _sfxDeath;
     [SerializeField] private AudioClip _sfxJump;
+    [SerializeField] private AudioClip _sfxCoin;
     // Use this for initialization
 
     private void Awake()
@@ -23,6 +27,7 @@ public class Player : MonoBehaviour
         Assert.IsNotNull(_sfxJump);
         Assert.IsNotNull(_sfxDeath);
         Assert.IsNotNull(_scoreText);
+        Assert.IsNotNull(_sfxCoin);
     }
 
     private void Start()
@@ -99,7 +104,9 @@ public class Player : MonoBehaviour
         if (other.gameObject.CompareTag("GoldCoin"))
             if (_coins != null)
             {
+               
                 GameManager.Instance.AddCoins(_coins.GetGoldCoinValue);
+                _audioSource.PlayOneShot(_sfxCoin);
                 other.gameObject.SetActive(false);
             }
     }

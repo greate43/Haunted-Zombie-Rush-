@@ -1,18 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
-    private AudioListener _audioListener;
-    private AudioSource _audioSource;
-
-    private bool _audioState = true;
-
     private int _coinsCount;
-    [SerializeField] private AudioClip _sfxCoin;
 
     public bool ActivePlayer { get; private set; }
 
@@ -24,20 +16,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        _audioSource = GetComponent<AudioSource>();
-        _audioListener = GetComponent<AudioListener>();
         _coinsCount = 0;
     }
 
-    public void Update()
-    {
-        if (_audioState == false)
-        {
-            _audioListener.enabled = true;
-            _audioState = true;
-        }
-    }
-
+ 
 
     private void Awake()
 
@@ -48,10 +30,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
 
-        Assert.IsNotNull(_sfxCoin);
 
 
-        DontDestroyOnLoad(gameObject);
     }
 
     public void PlayerCollided()
@@ -71,23 +51,19 @@ public class GameManager : MonoBehaviour
 
     public void AddCoins(int coinsToAdd)
     {
-        _audioSource.PlayOneShot(_sfxCoin);
+       
         _coinsCount += coinsToAdd;
     }
 
 
     public void BackToMainMenu()
     {
-        if (_audioState)
-        {
-            _audioListener.enabled = false;
-            _audioState = false;
-        }
+        
 
         GameOver = false;
         ActivePlayer = false;
         _coinsCount = 0;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
 
         OnPlayAgainPressed();
     }
@@ -106,7 +82,7 @@ public class GameManager : MonoBehaviour
             ActivePlayer = false;
             _coinsCount = 0;
         }
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
         OnPlayAgainPressed();
     }
 
