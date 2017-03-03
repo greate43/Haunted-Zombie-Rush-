@@ -35,7 +35,7 @@ public class AdsManager : MonoBehaviour
         _extraLivesVideosRewards.OnAdClosed += HandleRewardBasedVideoClosed;
         // is leaving the application.
         _extraLivesVideosRewards.OnAdLeavingApplication += HandleRewardBasedVideoLeftApplication;
-        RequestRewardBasedVideo();
+ 
         Debug.Log("ends ");
     }
 
@@ -45,7 +45,7 @@ public class AdsManager : MonoBehaviour
         {
             Debug.Log("clicked");
             ShowToast.Instance.ShowMyToastMethod("clicked");
-            LoadRewardVideoAds();
+            
         }
     }
 

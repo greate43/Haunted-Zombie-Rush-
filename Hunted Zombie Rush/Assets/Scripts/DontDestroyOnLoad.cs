@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class DontDestroyOnLoad : MonoBehaviour {
     void Awake()
     {
-        SceneManager.LoadScene("01 MainMenu");
+        SceneManager.LoadScene(2);
         DontDestroyOnLoad(gameObject);
         Debug.Log("DDOL "+gameObject.name);
     }
