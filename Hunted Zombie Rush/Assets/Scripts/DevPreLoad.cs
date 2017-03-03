@@ -6,7 +6,7 @@ public class DevPreLoad : MonoBehaviour {
     {
         GameObject check = GameObject.Find("__app");
         if (check == null)
-        { UnityEngine.SceneManagement.SceneManager.LoadScene("00 _preLoader"); }
+        { UnityEngine.SceneManagement.SceneManager.LoadScene(0); }
     }
 }
 

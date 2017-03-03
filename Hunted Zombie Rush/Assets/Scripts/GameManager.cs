@@ -29,9 +29,6 @@ public class GameManager : MonoBehaviour
         else if (Instance != null)
             Destroy(gameObject);
 
-
-
-
     }
 
     public void PlayerCollided()
@@ -64,7 +61,7 @@ public class GameManager : MonoBehaviour
         ActivePlayer = false;
         _coinsCount = 0;
         SceneManager.LoadScene(1);
-
+        Time.timeScale = 1;
         OnPlayAgainPressed();
     }
 
