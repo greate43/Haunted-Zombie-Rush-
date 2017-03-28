@@ -1,6 +1,5 @@
 ﻿using System;
 using GoogleMobileAds.Api;
-using UnityEngine;
 
 public class AdsManager : Singleton<AdsManager>
 {
