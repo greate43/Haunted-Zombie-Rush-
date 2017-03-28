@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Instance;
+
     private int _coinsCount;
 
     public bool ActivePlayer { get; private set; }
@@ -21,15 +21,7 @@ public class GameManager : MonoBehaviour
 
  
 
-    private void Awake()
-
-    {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != null)
-            Destroy(gameObject);
-
-    }
+ 
 
     public void PlayerCollided()
     {

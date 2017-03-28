@@ -1,20 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooler : MonoBehaviour
+public class ObjectPooler : Singleton<ObjectPooler>
 {
-    // makes a pool od objects to be reused
-    public static ObjectPooler Current;
+    
     [SerializeField] private int _pooledAmount = 20;
     [SerializeField] private GameObject _pooledObject;
     private List<GameObject> _pooledObjects;
     [SerializeField] private bool _willGrow = true;
 
 
-    private void Awake()
-    {
-        Current = this;
-    }
+ 
 
     // Use this for initialization
     private void Start()

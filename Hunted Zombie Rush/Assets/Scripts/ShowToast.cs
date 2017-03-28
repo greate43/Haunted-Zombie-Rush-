@@ -3,15 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShowToast : MonoBehaviour
+public class ShowToast : Singleton<ShowToast>
 {
-    public static ShowToast Instance;
-    // Use this for initialization
-    void Awake()
-    {
-
-        Instance = this;
-    }
+   
 
     string toastString;
     AndroidJavaObject currentActivity;

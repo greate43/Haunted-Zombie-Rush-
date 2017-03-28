@@ -2,18 +2,15 @@
 using GoogleMobileAds.Api;
 using UnityEngine;
 
-public class AdsManager : MonoBehaviour
+public class AdsManager : Singleton<AdsManager>
 {
-    public static AdsManager Instance;
+   
 //    private RewardBasedVideoAd _extraLivesVideosRewards;
     private InterstitialAd _interstitial;
 
 
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+  
 
     private void Start()
     {

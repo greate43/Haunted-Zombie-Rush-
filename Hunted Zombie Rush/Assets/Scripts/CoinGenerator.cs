@@ -7,11 +7,7 @@ public class CoinGenerator : MonoBehaviour
     [SerializeField] private float _randomCoinThreshhold = 2.5f;
 
 
-    // Use this for initialization
-    private void Start()
-    {
-    }
-
+  
     private void Update()
     {
         if (Physics.CheckSphere(
@@ -34,18 +30,18 @@ public class CoinGenerator : MonoBehaviour
     //used to generate the coins
     public void GenerateCoins(Vector3 startPosition)
     {
-        var coin1 = ObjectPooler.Current.GetPooledObject();
+        var coin1 = ObjectPooler.Instance.GetPooledObject();
         if (coin1 == null) return;
         coin1.transform.position = startPosition;
         coin1.SetActive(true);
 
-        var coin2 = ObjectPooler.Current.GetPooledObject();
+        var coin2 = ObjectPooler.Instance.GetPooledObject();
         if (coin2 == null) return;
         coin2.transform.position = new Vector3(startPosition.x - _distanceBetweenCoins,
             startPosition.y + _distanceBetweenCoins, startPosition.z);
         coin2.SetActive(true);
 
-        var coin3 = ObjectPooler.Current.GetPooledObject();
+        var coin3 = ObjectPooler.Instance.GetPooledObject();
         if (coin3 == null) return;
         coin3.transform.position = new Vector3(startPosition.x + 20f, startPosition.y - _distanceBetweenCoins,
             startPosition.z);
