@@ -1,9 +1,9 @@
-lastUpgrade=00936
-proj.pluginVersion=0.9.36
+lastUpgrade=00937
+proj.pluginVersion=0.9.37
 proj.AppId=1042882886250
 and.BundleId=com.greate43.sk.HuntedZombieRush
 proj.classDir=Assets%2fScripts
-proj.ConstantsClassName=GPGSIds
+proj.ConstantsClassName=GpgsIds
 and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3cstring+name%3d%22app_id%22%3e1042882886250%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22package_name%22%3ecom.greate43.sk.HuntedZombieRush%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_zombie_dead_in_rush%22%3eCgkI6vSnha0eEAIQAg%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_zombie_on_a_roll%22%3eCgkI6vSnha0eEAIQAw%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_zombie_having_a_blast%22%3eCgkI6vSnha0eEAIQBA%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_zombie_like_a_rock_star%22%3eCgkI6vSnha0eEAIQBQ%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_zombie_on_the_top_of_world%22%3eCgkI6vSnha0eEAIQBg%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22leaderboard_score%22%3eCgkI6vSnha0eEAIQAQ%3c%2fstring%3e%0d%0a%3c%2fresources%3e
 and.ClientId=
 proj.requireGPlus=false

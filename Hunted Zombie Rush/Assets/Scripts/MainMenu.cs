@@ -5,23 +5,27 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private Button _exitText;
-    [SerializeField] private GameObject _mainPanel;
-    private bool _menuState = true;
+    [SerializeField] private Button _exitButton;
+    [SerializeField] private Button _playButton;
+    [SerializeField] private Button _showScoreboards;
+    [SerializeField] private Button _NotLoggedButton;
+    [SerializeField] private Button _loggedInButton;
+
     [SerializeField] private GameObject _options;
-    [SerializeField] private Button _playText;
+    [SerializeField] private GameObject _mainPanel;
     [SerializeField] private Canvas _quitMenu;
     private float _saveVolume;
     public Slider VolmueSlider;
-
+    private bool _menuState = true;
     private void Awake()
     {
         Assert.IsNotNull(_quitMenu);
         Assert.IsNotNull(_mainPanel);
         Assert.IsNotNull(_options);
-
-
-
+        Assert.IsNotNull(_showScoreboards);
+        Assert.IsNotNull(_loggedInButton);
+        Assert.IsNotNull(_NotLoggedButton);
+        
         var getVolumeState = PlayerPrefs.GetFloat("Save Volume");
         if (PlayerPrefs.HasKey("Save Volume"))
         {
@@ -39,16 +43,16 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-
-    
-   
-        _quitMenu = _quitMenu.GetComponent<Canvas>();
-        _playText = _playText.GetComponent<Button>();
-        _exitText = _exitText.GetComponent<Button>();
-        _quitMenu.enabled = false;
-
-
        
+        _quitMenu = _quitMenu.GetComponent<Canvas>();
+        _playButton = _playButton.GetComponent<Button>();
+        _exitButton = _exitButton.GetComponent<Button>();
+        _showScoreboards = _showScoreboards.GetComponent<Button>();
+        _NotLoggedButton = _NotLoggedButton.GetComponent<Button>();
+        _loggedInButton = _loggedInButton.GetComponent<Button>();
+
+        _quitMenu.enabled = false;
+        
 
     }
 
@@ -59,6 +63,17 @@ public class MainMenu : MonoBehaviour
                 OnExitPressed();
             else
                 ReturnToMenu();
+
+        if (GoogleGameServicesManager.Instance.LoggedInSuccess)
+        {
+          _NotLoggedButton.gameObject.SetActive(false);
+            _loggedInButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            _NotLoggedButton.gameObject.SetActive(true);
+            _loggedInButton.gameObject.SetActive(false);
+        }
     }
 
     public void SetMasterVolume(float v)
@@ -72,16 +87,22 @@ public class MainMenu : MonoBehaviour
     public void OnExitPressed()
     {
         _quitMenu.enabled = true;
-        _playText.enabled = false;
-        _exitText.enabled = false;
+        _playButton.enabled = false;
+        _exitButton.enabled = false;
+        _showScoreboards.enabled = false;
+        _NotLoggedButton.enabled = false;
+        _loggedInButton.enabled = false;
     }
 
 
     public void OnNoPressed()
     {
         _quitMenu.enabled = false;
-        _playText.enabled = true;
-        _exitText.enabled = true;
+        _playButton.enabled = true;
+        _exitButton.enabled = true;
+        _showScoreboards.enabled = true;
+        _NotLoggedButton.enabled = true;
+        _loggedInButton.enabled = true;
     }
 
     public void StartGame()
@@ -111,6 +132,20 @@ public class MainMenu : MonoBehaviour
         _menuState = true;
     }
 
- 
 
+    public void ShowLeaderboards()
+    {
+        GoogleGameServicesManager.Instance.OpenLeaderBoardScore();
+    }
+
+    public void NotLoggedIn()
+    {
+        GoogleGameServicesManager.Instance.ConnectGoogleGameServices();
+
+    }
+
+    public void LoggedIn()
+    {
+        GoogleGameServicesManager.Instance.DisconnectGoogleGameServices();
+    }
 }

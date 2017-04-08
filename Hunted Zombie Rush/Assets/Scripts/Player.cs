@@ -51,9 +51,26 @@ public class Player : MonoBehaviour
         if (GameManager.Instance.GameOver)
         {
             StoreHighscore(GameManager.Instance.GetScore());
+            GoogleGameServicesManager.Instance.ZombieDeadInRush();
             return;
         }
-//
+        if (GameManager.Instance.GetScore()==30)
+        {
+            GoogleGameServicesManager.Instance.ZombieOnARoll();
+        }
+        if (GameManager.Instance.GetScore() == 60)
+        {
+            GoogleGameServicesManager.Instance.ZombieHavingABlast();
+        }
+        if (GameManager.Instance.GetScore() == 150)
+        {
+            GoogleGameServicesManager.Instance.ZombieLikeARockStar();
+        }
+        if (GameManager.Instance.GetScore() == 500)
+        {
+            GoogleGameServicesManager.Instance.ZombieOnTheTopOfWorld();
+        }
+        //
         StartPlaying();
         if (GameManager.Instance.GameRestarted)
             _rigidBody.detectCollisions = true;

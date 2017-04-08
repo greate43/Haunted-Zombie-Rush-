@@ -65,7 +65,7 @@ public class GameOverManager : MonoBehaviour
 
             _anim.SetTrigger("GameOver");
             
-           
+            GoogleGameServicesManager.Instance.OnLevelScoreWasLoaded();
             if (_randomNumber<_probablityOfAdsBeingShowed)
             {
                 
