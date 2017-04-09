@@ -4,36 +4,23 @@ using UnityEngine;
 
 public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
 {
-    private int _state;
+ 
 
-    public bool LoggedInSuccess { get; private set; }
+
 	// Use this for initialization
 	public void Awake ()
 	{
-	    var state = PlayerPrefs.GetInt("GooleLoginState");
-	    if (PlayerPrefs.HasKey("GooleLoginState"))
-	    {
-	        if (state==1)
-	        {
-	            LoggedInSuccess = true;
-	        }
-	        else
-	        {
-	            LoggedInSuccess = false;
-	        }
-        }
+
 
             // recommended for debugging:
-            PlayGamesPlatform.DebugLogEnabled = true;
+       //     PlayGamesPlatform.DebugLogEnabled = true;
         // Activate the Google Play Games platform
         PlayGamesPlatform.Activate();
+
+        ConnectGoogleGameServices();
     }
 
-    void Update()
-    {
-     
-       
-    }
+   
 
     public void ConnectGoogleGameServices()
     {
@@ -45,31 +32,32 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
                 // handle success or failure
                 if (success)
                 {
-                    LoggedInSuccess = true;
-                    _state = 1;
-                    PlayerPrefs.SetInt("GooleLoginState", _state);
+                   
+
+               //     MainMenu.Instance.ActivateLogin(true);
+
                 }
                 else
                 {
-                    ShowToast.Instance.ShowMyToastMethod("Unable To Login");
+                    ShowToast.Instance.ShowMyToastMethod("Unable To Login or Network Failure");
                 }
             });
         }
         
     }
-
-    public void DisconnectGoogleGameServices()
-    {
-
-        if (Social.localUser.authenticated)
-        {
-            PlayGamesPlatform.Instance.SignOut();
-            LoggedInSuccess = false;
-            _state = 0;
-            PlayerPrefs.SetInt("GooleLoginState", _state);
-
-        }
-    }
+//
+//    public void DisconnectGoogleGameServices()
+//    {
+//
+//        if (Social.localUser.authenticated)
+//        {
+//        
+//            MainMenu.Instance.ActivateLogin(false);
+//            // sign out
+//            PlayGamesPlatform.Instance.SignOut();
+//
+//        }
+//    }
     public void OpenLeaderBoardScore()
     {
         if (Social.localUser.authenticated)

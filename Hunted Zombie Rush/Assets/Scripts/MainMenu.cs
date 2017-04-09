@@ -3,13 +3,13 @@ using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+public class MainMenu : Singleton<MainMenu>
 {
     [SerializeField] private Button _exitButton;
     [SerializeField] private Button _playButton;
     [SerializeField] private Button _showScoreboards;
-    [SerializeField] private Button _NotLoggedButton;
-    [SerializeField] private Button _loggedInButton;
+  //  [SerializeField] private Button _notLoggedButton;
+    //[SerializeField] private Button _loggedInButton;
 
     [SerializeField] private GameObject _options;
     [SerializeField] private GameObject _mainPanel;
@@ -23,8 +23,8 @@ public class MainMenu : MonoBehaviour
         Assert.IsNotNull(_mainPanel);
         Assert.IsNotNull(_options);
         Assert.IsNotNull(_showScoreboards);
-        Assert.IsNotNull(_loggedInButton);
-        Assert.IsNotNull(_NotLoggedButton);
+     //   Assert.IsNotNull(_loggedInButton);
+       // Assert.IsNotNull(_notLoggedButton);
         
         var getVolumeState = PlayerPrefs.GetFloat("Save Volume");
         if (PlayerPrefs.HasKey("Save Volume"))
@@ -48,8 +48,8 @@ public class MainMenu : MonoBehaviour
         _playButton = _playButton.GetComponent<Button>();
         _exitButton = _exitButton.GetComponent<Button>();
         _showScoreboards = _showScoreboards.GetComponent<Button>();
-        _NotLoggedButton = _NotLoggedButton.GetComponent<Button>();
-        _loggedInButton = _loggedInButton.GetComponent<Button>();
+      //  _notLoggedButton = _notLoggedButton.GetComponent<Button>();
+        //_loggedInButton = _loggedInButton.GetComponent<Button>();
 
         _quitMenu.enabled = false;
         
@@ -64,18 +64,30 @@ public class MainMenu : MonoBehaviour
             else
                 ReturnToMenu();
 
-        if (GoogleGameServicesManager.Instance.LoggedInSuccess)
-        {
-          _NotLoggedButton.gameObject.SetActive(false);
-            _loggedInButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            _NotLoggedButton.gameObject.SetActive(true);
-            _loggedInButton.gameObject.SetActive(false);
-        }
+      
     }
 
+
+//    public void ActivateLogin(bool success)
+//    {
+//        if (success)
+//        {
+//           
+//            _notLoggedButton.enabled = false;
+//            _notLoggedButton.gameObject.SetActive(false);
+//            _loggedInButton.enabled = true;
+//            _loggedInButton.gameObject.SetActive(true);
+//
+//        }
+//        else
+//        {
+//            
+//            _notLoggedButton.enabled = true;
+//            _notLoggedButton.gameObject.SetActive(true);
+//            _loggedInButton.enabled = false;
+//            _loggedInButton.gameObject.SetActive(false);
+//        }
+ //   }
     public void SetMasterVolume(float v)
     {
         AudioListener.volume = VolmueSlider.value;
@@ -90,8 +102,8 @@ public class MainMenu : MonoBehaviour
         _playButton.enabled = false;
         _exitButton.enabled = false;
         _showScoreboards.enabled = false;
-        _NotLoggedButton.enabled = false;
-        _loggedInButton.enabled = false;
+       // _notLoggedButton.enabled = false;
+    //    _loggedInButton.enabled = false;
     }
 
 
@@ -101,8 +113,8 @@ public class MainMenu : MonoBehaviour
         _playButton.enabled = true;
         _exitButton.enabled = true;
         _showScoreboards.enabled = true;
-        _NotLoggedButton.enabled = true;
-        _loggedInButton.enabled = true;
+       // _notLoggedButton.enabled = true;
+        //_loggedInButton.enabled = true;
     }
 
     public void StartGame()
@@ -138,14 +150,14 @@ public class MainMenu : MonoBehaviour
         GoogleGameServicesManager.Instance.OpenLeaderBoardScore();
     }
 
-    public void NotLoggedIn()
-    {
-        GoogleGameServicesManager.Instance.ConnectGoogleGameServices();
-
-    }
-
-    public void LoggedIn()
-    {
-        GoogleGameServicesManager.Instance.DisconnectGoogleGameServices();
-    }
+//    public void NotLoggedIn()
+//    {
+//        GoogleGameServicesManager.Instance.ConnectGoogleGameServices();
+//
+//    }
+//
+//    public void LoggedIn()
+//    {
+//        GoogleGameServicesManager.Instance.DisconnectGoogleGameServices();
+//    }
 }
