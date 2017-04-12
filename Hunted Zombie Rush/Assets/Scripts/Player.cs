@@ -12,9 +12,9 @@ public class Player : MonoBehaviour
 
 
 
-
-    [SerializeField] private Text _highScoreText;
     [SerializeField] private float _jumpForce = 100f;
+    [SerializeField] private Text _highScoreText;
+    [SerializeField] private Button _tapToJump;
     [SerializeField] private Text _scoreText;
     [SerializeField] private AudioClip _sfxDeath;
     [SerializeField] private AudioClip _sfxJump;
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
         _rigidBody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
         _coins = FindObjectOfType<CoinValue>();
-
+        _tapToJump = _tapToJump.GetComponent<Button>();
         StoreHighscore(GameManager.Instance.GetScore());
 
         if (_scoreText != null) _scoreText.text = "" + GameManager.Instance.GetScore();
@@ -88,10 +88,17 @@ public class Player : MonoBehaviour
         GameManager.Instance.PlayerStartedGame();
         _anim.Play("Jump");
         _audioSource.PlayOneShot(_sfxJump);
-
-        _rigidBody.useGravity = true;
+       _rigidBody.useGravity = true;
         _jump = true;
+       DeactivateTapToPlayButton();
+
     }
+
+    public void DeactivateTapToPlayButton()
+    {
+     _tapToJump.gameObject.SetActive(false);
+    }
+
 
     //fixed updates per sec
     //if true the player will jump
