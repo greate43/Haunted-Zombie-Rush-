@@ -62,7 +62,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
     {
         if (Social.localUser.authenticated)
         {
-            PlayGamesPlatform.Instance.ShowLeaderboardUI(GpgsIds.LeaderboardScore);
+            PlayGamesPlatform.Instance.ShowLeaderboardUI();
         }
         else
         {

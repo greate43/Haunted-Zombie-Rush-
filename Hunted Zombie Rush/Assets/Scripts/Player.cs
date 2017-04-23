@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
     //0 means left
     protected void Update()
     {
+       
         //if game over is true return and save the score
         if (GameManager.Instance.GameOver)
         {
@@ -54,24 +55,11 @@ public class Player : MonoBehaviour
             GoogleGameServicesManager.Instance.ZombieDeadInRush();
             return;
         }
-        if (GameManager.Instance.GetScore()==30)
-        {
-            GoogleGameServicesManager.Instance.ZombieOnARoll();
-        }
-        if (GameManager.Instance.GetScore() == 60)
-        {
-            GoogleGameServicesManager.Instance.ZombieHavingABlast();
-        }
-        if (GameManager.Instance.GetScore() == 150)
-        {
-            GoogleGameServicesManager.Instance.ZombieLikeARockStar();
-        }
-        if (GameManager.Instance.GetScore() == 500)
-        {
-            GoogleGameServicesManager.Instance.ZombieOnTheTopOfWorld();
-        }
-        //
         StartPlaying();
+        CheckIfAchievementIsUnlocked();
+
+        //
+   
         if (GameManager.Instance.GameRestarted)
             _rigidBody.detectCollisions = true;
 
@@ -92,6 +80,26 @@ public class Player : MonoBehaviour
         _jump = true;
        DeactivateTapToPlayButton();
 
+    }
+
+    private void CheckIfAchievementIsUnlocked()
+    {
+        if (GameManager.Instance.GetScore() == 30)
+        {
+            GoogleGameServicesManager.Instance.ZombieOnARoll();
+        }
+        if (GameManager.Instance.GetScore() == 60)
+        {
+            GoogleGameServicesManager.Instance.ZombieHavingABlast();
+        }
+        if (GameManager.Instance.GetScore() == 150)
+        {
+            GoogleGameServicesManager.Instance.ZombieLikeARockStar();
+        }
+        if (GameManager.Instance.GetScore() == 500)
+        {
+            GoogleGameServicesManager.Instance.ZombieOnTheTopOfWorld();
+        }
     }
 
     public void DeactivateTapToPlayButton()

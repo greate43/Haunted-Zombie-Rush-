@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,33 +9,47 @@ public class MainMenu : Singleton<MainMenu>
     [SerializeField] private Button _exitButton;
     [SerializeField] private Button _playButton;
     [SerializeField] private Button _showScoreboards;
+    [SerializeField] private Button _optionsButton;
   //  [SerializeField] private Button _notLoggedButton;
     //[SerializeField] private Button _loggedInButton;
 
-    [SerializeField] private GameObject _options;
+    [SerializeField] private GameObject _optionsPanel;
     [SerializeField] private GameObject _mainPanel;
     [SerializeField] private Canvas _quitMenu;
-    private float _saveVolume;
-    public Slider VolmueSlider;
-    private bool _menuState = true;
+    [SerializeField] private Slider _volmueSlider;
+    [SerializeField] private GameObject _loadingScreenBg;
+
+    [SerializeField] private Text _loadingText;
+    [SerializeField] private bool _loadingBar;
+    [SerializeField] private Text _progress;
+
+                     private AsyncOperation _ao;
+                     private float _saveVolume;
+                     private bool _menuState = true;
+                         
     private void Awake()
     {
         Assert.IsNotNull(_quitMenu);
         Assert.IsNotNull(_mainPanel);
-        Assert.IsNotNull(_options);
+        Assert.IsNotNull(_optionsPanel);
         Assert.IsNotNull(_showScoreboards);
+        Assert.IsNotNull(_optionsButton);
+        Assert.IsNotNull(_progress);
+        Assert.IsNotNull(_loadingText);
+        Assert.IsNotNull(_loadingScreenBg);
+
      //   Assert.IsNotNull(_loggedInButton);
        // Assert.IsNotNull(_notLoggedButton);
         
         var getVolumeState = PlayerPrefs.GetFloat("Save Volume");
         if (PlayerPrefs.HasKey("Save Volume"))
         {
-            VolmueSlider.value = getVolumeState;
+            _volmueSlider.value = getVolumeState;
             AudioListener.volume = getVolumeState;
         }
         else
         {
-            VolmueSlider.value = 0.6f;
+            _volmueSlider.value = 0.6f;
             AudioListener.volume = 0.6f;
         }
 //        PlayerPrefs.DeleteKey("Save Volume");
@@ -48,6 +63,9 @@ public class MainMenu : Singleton<MainMenu>
         _playButton = _playButton.GetComponent<Button>();
         _exitButton = _exitButton.GetComponent<Button>();
         _showScoreboards = _showScoreboards.GetComponent<Button>();
+        _optionsButton = _optionsButton.GetComponent<Button>();
+        _progress = _progress.GetComponent<Text>();
+        _loadingText = _loadingText.GetComponent<Text>();
       //  _notLoggedButton = _notLoggedButton.GetComponent<Button>();
         //_loggedInButton = _loggedInButton.GetComponent<Button>();
 
@@ -90,8 +108,8 @@ public class MainMenu : Singleton<MainMenu>
  //   }
     public void SetMasterVolume(float v)
     {
-        AudioListener.volume = VolmueSlider.value;
-        _saveVolume = VolmueSlider.value;
+        AudioListener.volume = _volmueSlider.value;
+        _saveVolume = _volmueSlider.value;
         PlayerPrefs.SetFloat("Save Volume", _saveVolume);
     }
 
@@ -102,8 +120,9 @@ public class MainMenu : Singleton<MainMenu>
         _playButton.enabled = false;
         _exitButton.enabled = false;
         _showScoreboards.enabled = false;
-       // _notLoggedButton.enabled = false;
-    //    _loggedInButton.enabled = false;
+        _optionsButton.enabled = false;
+        // _notLoggedButton.enabled = false;
+        //    _loggedInButton.enabled = false;
     }
 
 
@@ -113,17 +132,33 @@ public class MainMenu : Singleton<MainMenu>
         _playButton.enabled = true;
         _exitButton.enabled = true;
         _showScoreboards.enabled = true;
-       // _notLoggedButton.enabled = true;
+        _optionsButton.enabled = true;
+        // _notLoggedButton.enabled = true;
         //_loggedInButton.enabled = true;
     }
 
     public void StartGame()
     {
-        SceneManager.LoadScene(2);
-        if (Time.timeScale.Equals(0))
-            Time.timeScale = 1;
+        _loadingScreenBg.SetActive(true);
+       //_progress.gameObject.SetActive(true);
+        _loadingText.gameObject.SetActive(true);
+        if (!_loadingBar)
+        {
+            StartCoroutine(LoadLevelInBackground());
+        }
+        
+        
+      
+       
     }
 
+    IEnumerator LoadLevelInBackground()
+    {
+        _ao = SceneManager.LoadSceneAsync(2);
+        _ao.allowSceneActivation = true;
+        yield return null;
+    }
+   
     public void GameExit()
     {
         Application.Quit();
@@ -133,13 +168,13 @@ public class MainMenu : Singleton<MainMenu>
     {
 
         _mainPanel.SetActive(false);
-        _options.SetActive(true);
+        _optionsPanel.SetActive(true);
         _menuState = false;
     }
 
     public void ReturnToMenu()
     {
-        _options.SetActive(false);
+        _optionsPanel.SetActive(false);
         _mainPanel.SetActive(true);
         _menuState = true;
     }
