@@ -155,6 +155,7 @@ public class MainMenu : Singleton<MainMenu>
     IEnumerator LoadLevelInBackground()
     {
         _ao = SceneManager.LoadSceneAsync(2);
+  
         _ao.allowSceneActivation = true;
         yield return null;
     }

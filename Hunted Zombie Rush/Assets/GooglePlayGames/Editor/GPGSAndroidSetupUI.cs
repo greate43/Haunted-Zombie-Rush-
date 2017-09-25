@@ -14,7 +14,6 @@
 //    limitations under the License.
 // </copyright>
 
-#if UNITY_ANDROID
 
 namespace GooglePlayGames.Editor
 {
@@ -66,6 +65,15 @@ namespace GooglePlayGames.Editor
             window.minSize = new Vector2(500, 400);
         }
 
+        [MenuItem("Window/Google Play Games/Setup/Android setup...", true)]
+        public static bool EnableAndroidMenuItem() {
+#if UNITY_ANDROID
+            return true;
+#else
+            return false;
+#endif
+        }
+
         /// <summary>
         /// Performs setup using the Android resources downloaded XML file
         /// from the play console.
@@ -102,13 +110,10 @@ namespace GooglePlayGames.Editor
                 // check the bundle id and set it if needed.
                 CheckBundleId();
 
-
                 Google.VersionHandler.VerboseLoggingEnabled = true;
                 Google.VersionHandler.UpdateVersionedAssets(forceUpdate: true);
                 Google.VersionHandler.Enabled = true;
                 AssetDatabase.Refresh();
-
-                GPGSDependencies.RegisterDependencies();
 
                 Google.VersionHandler.InvokeStaticMethod(
                     Google.VersionHandler.FindClass(
@@ -159,12 +164,13 @@ namespace GooglePlayGames.Editor
                 return false;
             }
 
-            if (nearbySvcId != null)
-            {
+            if (nearbySvcId != null) {
+#if UNITY_ANDROID
                 if (!NearbyConnectionUI.PerformSetup(nearbySvcId, true))
                 {
                     return false;
                 }
+#endif
             }
 
             GPGSProjectSettings.Instance.Set(GPGSUtil.APPIDKEY, appId);
@@ -352,7 +358,7 @@ namespace GooglePlayGames.Editor
             if (!string.IsNullOrEmpty(packageName))
             {
                 if (string.IsNullOrEmpty(currentId) ||
-                    currentId == "com.Company.ProductName") 
+                    currentId == "com.Company.ProductName")
                 {
 #if UNITY_5_6_OR_NEWER
                     PlayerSettings.SetApplicationIdentifier(
@@ -446,4 +452,3 @@ namespace GooglePlayGames.Editor
         }
     }
 }
-#endif

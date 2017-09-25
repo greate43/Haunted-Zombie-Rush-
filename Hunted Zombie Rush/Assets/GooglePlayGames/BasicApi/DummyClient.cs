@@ -100,6 +100,13 @@ namespace GooglePlayGames.BasicApi
             return null;
         }
 
+        public void GetAnotherServerAuthCode(bool reAuthenticateIfNeeded,
+                                             Action<string> callback)
+        {
+            LogUsage();
+            callback(null);
+        }
+
         /// <summary>
         /// Gets the user's email.
         /// </summary>
@@ -422,6 +429,7 @@ namespace GooglePlayGames.BasicApi
         /// Gets the quests client.
         /// </summary>
         /// <returns>The quests client.</returns>
+        [Obsolete("Quests are being removed in 2018.")]
         public GooglePlayGames.BasicApi.Quests.IQuestsClient GetQuestsClient()
         {
             LogUsage();
@@ -496,6 +504,16 @@ namespace GooglePlayGames.BasicApi
         {
             LogUsage();
             return IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Sets the gravity for popups (Android only).
+        /// </summary>
+        /// <remarks>This can only be called after authentication.  It affects
+        /// popups for achievements and other game services elements.</remarks>
+        /// <param name="gravity">Gravity for the popup.</param>
+        public void SetGravityForPopups(Gravity gravity) {
+            LogUsage();
         }
 
         /// <summary>

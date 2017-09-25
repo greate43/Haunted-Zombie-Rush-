@@ -4,12 +4,12 @@
 #import "GADUBanner.h"
 #import "GADUInterstitial.h"
 #import "GADUNativeCustomTemplateAd.h"
+#import "GADUAdNetworkExtras.h"
 #import "GADUNativeExpressAd.h"
 #import "GADUObjectCache.h"
 #import "GADURequest.h"
 #import "GADURewardBasedVideoAd.h"
 #import "GADUTypes.h"
-#import "GADUAdNetworkExtras.h"
 
 /// Returns an NSString copying the characters from |bytes|, a C array of UTF8-encoded bytes.
 /// Returns nil if |bytes| is NULL.
@@ -33,7 +33,7 @@ static const char **cStringArrayCopy(NSArray *array) {
 
   const char **stringArray;
 
-  stringArray = malloc(array.count * sizeof(char *));
+  stringArray = calloc(array.count, sizeof(char *));
   for (int i = 0; i < array.count; i++) {
     stringArray[i] = cStringCopy([array[i] UTF8String]);
   }
@@ -42,10 +42,13 @@ static const char **cStringArrayCopy(NSArray *array) {
 
 /// Defines the native ad types.
 struct AdTypes {
-  bool customTemplateAd;
-  bool appInstallAd;
-  bool contentAd;
+  int CustomTemplateAd;
 };
+
+/// Configures the SDK using the settings associated with the given application ID.
+void GADUInitialize(const char *appId) {
+  [GADMobileAds configureWithApplicationID:GADUStringFromUTF8String(appId)];
+}
 
 /// Creates a GADBannerView with the specified width, height, and position. Returns a reference to
 /// the GADUBannerView.
@@ -55,8 +58,8 @@ GADUTypeBannerRef GADUCreateBannerView(GADUTypeBannerClientRef *bannerClient, co
   GADUBanner *banner =
       [[GADUBanner alloc] initWithBannerClientReference:bannerClient
                                                adUnitID:GADUStringFromUTF8String(adUnitID)
-                                                  width:width
-                                                 height:height
+                                                  width:(int)width
+                                                 height:(int)height
                                              adPosition:adPosition];
   GADUObjectCache *cache = [GADUObjectCache sharedInstance];
   [cache.references setObject:banner forKey:[banner gadu_referenceKey]];
@@ -70,11 +73,11 @@ GADUTypeBannerRef GADUCreateBannerViewWithCustomPosition(GADUTypeBannerClientRef
                                                          NSInteger height, NSInteger x,
                                                          NSInteger y) {
   CGPoint adPosition = CGPointMake(x, y);
-  GADAdSize adSize = GADAdSizeFromCGSize(CGSizeMake(width, height));
   GADUBanner *banner =
       [[GADUBanner alloc] initWithBannerClientReference:bannerClient
                                                adUnitID:GADUStringFromUTF8String(adUnitID)
-                                                 adSize:adSize
+                                                  width:(int)width
+                                                 height:(int)height
                                        customAdPosition:adPosition];
   GADUObjectCache *cache = [GADUObjectCache sharedInstance];
   [cache.references setObject:banner forKey:[banner gadu_referenceKey]];
@@ -139,7 +142,7 @@ GADUTypeAdLoaderRef GADUCreateAdLoader(GADUTypeAdLoaderClientRef *adLoaderClient
     [templateIDsArray addObject:GADUStringFromUTF8String(templateIDs[i])];
   }
   NSMutableArray *adTypesArray = [[NSMutableArray alloc] init];
-  if (types->customTemplateAd) {
+  if (types->CustomTemplateAd) {
     [adTypesArray addObject:kGADAdLoaderAdTypeNativeCustomTemplate];
   }
 
@@ -243,11 +246,11 @@ GADUTypeNativeExpressAdRef GADUCreateNativeExpressAdViewWithCustomPosition(
     GADUTypeNativeExpressAdClientRef *nativeExpressAdClient, const char *adUnitID, NSInteger width,
     NSInteger height, NSInteger x, NSInteger y) {
   CGPoint adPosition = CGPointMake(x, y);
-  GADAdSize adSize = GADAdSizeFromCGSize(CGSizeMake(width, height));
   GADUNativeExpressAd *nativeExpressAd = [[GADUNativeExpressAd alloc]
       initWithNativeExpressAdClientReference:nativeExpressAdClient
                                     adUnitID:GADUStringFromUTF8String(adUnitID)
-                                      adSize:adSize
+                                       width:width
+                                      height:height
                             customAdPosition:adPosition];
   GADUObjectCache *cache = [GADUObjectCache sharedInstance];
   [cache.references setObject:nativeExpressAd forKey:[nativeExpressAd gadu_referenceKey]];
@@ -257,10 +260,10 @@ GADUTypeNativeExpressAdRef GADUCreateNativeExpressAdViewWithCustomPosition(
 /// Sets the banner callback methods to be invoked during native ad events.
 void GADUSetAdLoaderCallbacks(
     GADUTypeAdLoaderRef adLoader,
-    GADUAdLoaderDidReceiveNativeCustomTemplateAdCallback adReceivedCallback,
+    GADUAdLoaderDidReceiveNativeCustomTemplateAdCallback customTemplateAdReceivedCallback,
     GADUAdLoaderDidFailToReceiveAdWithErrorCallback adFailedCallback) {
   GADUAdLoader *internalAdLoader = (__bridge GADUAdLoader *)adLoader;
-  internalAdLoader.adReceivedCallback = adReceivedCallback;
+  internalAdLoader.customTemplateAdReceivedCallback = customTemplateAdReceivedCallback;
   internalAdLoader.adFailedCallback = adFailedCallback;
 }
 
@@ -461,7 +464,7 @@ const char *GADUNativeCustomTemplateAdTemplateID(
     GADUTypeNativeCustomTemplateAdRef nativeCustomTemplateAd) {
   GADUNativeCustomTemplateAd *internalNativeCustomTemplateAd =
       (__bridge GADUNativeCustomTemplateAd *)nativeCustomTemplateAd;
-  return cStringCopy([[internalNativeCustomTemplateAd templateID] UTF8String]);
+  return cStringCopy([internalNativeCustomTemplateAd templateID].UTF8String);
 }
 
 /// Returns the image corresponding to the specifed key as a base64 encoded byte array.
@@ -472,7 +475,7 @@ const char *GADUNativeCustomTemplateAdImageAsBytesForKey(
   NSData *imageData = UIImageJPEGRepresentation(
       [internalNativeCustomTemplateAd imageForKey:GADUStringFromUTF8String(key)], 0.0);
   NSString *base64String = [imageData base64Encoding];
-  return cStringCopy([base64String UTF8String]);
+  return cStringCopy(base64String.UTF8String);
 }
 
 /// Returns the string corresponding to the specifed key.
@@ -481,7 +484,7 @@ const char *GADUNativeCustomTemplateAdStringForKey(
   GADUNativeCustomTemplateAd *internalNativeCustomTemplateAd =
       (__bridge GADUNativeCustomTemplateAd *)nativeCustomTemplateAd;
   return cStringCopy(
-      [[internalNativeCustomTemplateAd stringForKey:GADUStringFromUTF8String(key)] UTF8String]);
+      [internalNativeCustomTemplateAd stringForKey:GADUStringFromUTF8String(key)].UTF8String);
 }
 
 /// Call when the ad is played on screen to the user.

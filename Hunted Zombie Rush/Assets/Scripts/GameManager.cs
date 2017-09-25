@@ -54,14 +54,11 @@ public class GameManager : Singleton<GameManager>
         _coinsCount = 0;
         SceneManager.LoadScene(1);
         Time.timeScale = 1;
-        OnPlayAgainPressed();
+   
     }
 
 
-    public void OnPlayAgainPressed()
-    {
-        GameRestarted = true;
-    }
+   
 
     public void PlayAgain()
     {
@@ -72,7 +69,7 @@ public class GameManager : Singleton<GameManager>
             _coinsCount = 0;
         }
         SceneManager.LoadScene(2);
-        OnPlayAgainPressed();
+  
     }
 
 

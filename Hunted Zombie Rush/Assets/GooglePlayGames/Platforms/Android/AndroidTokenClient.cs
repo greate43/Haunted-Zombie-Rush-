@@ -41,8 +41,12 @@ namespace GooglePlayGames.Android
          */
         private const string FetchTokenSignature =
             "(Landroid/app/Activity;ZZZLjava/lang/String;Z[Ljava/lang/String;ZLjava/lang/String;)Lcom/google/android/gms/common/api/PendingResult;";
-        
+
         private const string FetchTokenMethod = "fetchToken";
+
+        private const string GetAnotherAuthCodeMethod = "getAnotherAuthCode";
+        private const string GetAnotherAuthCodeSignature =
+              "(Landroid/app/Activity;ZLjava/lang/String;)Lcom/google/android/gms/common/api/PendingResult;";
 
         // These are the configuration values.
         private bool requestEmail;
@@ -112,24 +116,29 @@ namespace GooglePlayGames.Android
 
         public void Signout()
         {
-            Debug.Log("Calling Signout in token client");
-            AndroidJavaClass cls = new AndroidJavaClass(TokenFragmentClass);
-            cls.CallStatic("signOut");
+            authCode = null;
+            email = null;
+            idToken = null;
+            PlayGamesHelperObject.RunOnGameThread(() => {
+                Debug.Log("Calling Signout in token client");
+                AndroidJavaClass cls = new AndroidJavaClass(TokenFragmentClass);
+                cls.CallStatic("signOut", GetActivity());
+            });
         }
 
         public bool NeedsToRun()
         {
-            return requestAuthCode && String.IsNullOrEmpty(authCode) ||
-                        requestEmail && String.IsNullOrEmpty(email) ||
-                        requestIdToken && String.IsNullOrEmpty(idToken);
+            return requestAuthCode ||
+                        requestEmail ||
+                        requestIdToken;
         }
 
-        public void FetchTokens(Action callback)
+        public void FetchTokens(Action<int> callback)
         {
             PlayGamesHelperObject.RunOnGameThread(() => DoFetchToken(callback));
         }
 
-        internal void DoFetchToken(Action callback)
+        internal void DoFetchToken(Action<int> callback)
         {
             object[] objectArray = new object[9];
             jvalue[] jArgs = AndroidJNIHelper.CreateJNIArgArray(objectArray);
@@ -138,7 +147,7 @@ namespace GooglePlayGames.Android
             {
                 using (var bridgeClass = new AndroidJavaClass(TokenFragmentClass))
                 {
-                    using (var currentActivity = AndroidTokenClient.GetActivity())
+                    using (var currentActivity = GetActivity())
                     {
                         // Unity no longer supports constructing an AndroidJavaObject using an IntPtr,
                         // so I have to manually munge with JNI here.
@@ -164,51 +173,8 @@ namespace GooglePlayGames.Android
                             this.authCode = authCode;
                             this.email = email;
                             this.idToken = idToken;
-                            callback();
+                            callback(rc);
                             }));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                OurUtils.Logger.e("Exception launching token request: " + e.Message);
-                OurUtils.Logger.e(e.ToString());
-            }
-            finally
-            {
-                AndroidJNIHelper.DeleteJNIArgArray(objectArray, jArgs);
-            }
-        }
-
-        internal static void FetchToken(bool fetchAuthCode, bool fetchEmail,
-                                         bool fetchIdToken, string webClientId, bool forceRefresh,
-                                        Action<int, string, string, string> callback)
-        {
-            object[] objectArray = new object[7];
-            jvalue[] jArgs = AndroidJNIHelper.CreateJNIArgArray(objectArray);
-            try
-            {
-                using (var bridgeClass = new AndroidJavaClass(TokenFragmentClass))
-                {
-                    using (var currentActivity = AndroidTokenClient.GetActivity())
-                    {
-                        // Unity no longer supports constructing an AndroidJavaObject using an IntPtr,
-                        // so I have to manually munge with JNI here.
-                        IntPtr methodId = AndroidJNI.GetStaticMethodID(bridgeClass.GetRawClass(),
-                                              FetchTokenMethod,
-                                              FetchTokenSignature);
-                        jArgs[0].l = currentActivity.GetRawObject();
-                        jArgs[1].z = fetchAuthCode;
-                        jArgs[2].z = fetchEmail;
-                        jArgs[3].z = fetchIdToken;
-                        jArgs[4].l = AndroidJNI.NewStringUTF(webClientId);
-                        jArgs[5].z = forceRefresh;
-
-                        IntPtr ptr =
-                            AndroidJNI.CallStaticObjectMethod(bridgeClass.GetRawClass(), methodId, jArgs);
-
-                        PendingResult<TokenResult> pr = new PendingResult<TokenResult>(ptr);
-                        pr.setResultCallback(new TokenResultCallback(callback));
                     }
                 }
             }
@@ -237,6 +203,60 @@ namespace GooglePlayGames.Android
         public string GetAuthCode()
         {
             return authCode;
+        }
+
+        /// <summary>
+        /// Gets another server auth code.
+        /// </summary>
+        /// <remarks>This method should be called after authenticating, and exchanging
+        /// the initial server auth code for a token.  This is implemented by signing in
+        /// silently, which if successful returns almost immediately and with a new
+        /// server auth code.
+        /// </remarks>
+        /// <param name="reAuthenticateIfNeeded">Calls Authenticate if needed when
+        /// retrieving another auth code. </param>
+        /// <param name="callback">Callback.</param>
+        public void GetAnotherServerAuthCode(bool reAuthenticateIfNeeded, Action<string> callback)
+        {
+            object[] objectArray = new object[3];
+            jvalue[] jArgs = AndroidJNIHelper.CreateJNIArgArray(objectArray);
+
+            try
+            {
+                using (var bridgeClass = new AndroidJavaClass(TokenFragmentClass))
+                {
+                    using (var currentActivity = GetActivity())
+                    {
+                        // Unity no longer supports constructing an AndroidJavaObject using an IntPtr,
+                        // so I have to manually munge with JNI here.
+                        IntPtr methodId = AndroidJNI.GetStaticMethodID(bridgeClass.GetRawClass(),
+                                GetAnotherAuthCodeMethod,
+                                GetAnotherAuthCodeSignature);
+                        jArgs[0].l = currentActivity.GetRawObject();
+                        jArgs[1].z = reAuthenticateIfNeeded;
+                        jArgs[2].l = AndroidJNI.NewStringUTF(webClientId);
+
+                        IntPtr ptr =
+                            AndroidJNI.CallStaticObjectMethod(bridgeClass.GetRawClass(), methodId, jArgs);
+
+                        PendingResult<TokenResult> pr = new PendingResult<TokenResult>(ptr);
+                        pr.setResultCallback(new TokenResultCallback((rc, authCode, email, idToken) =>
+                        {
+                            this.authCode = authCode;
+                            callback(authCode);
+                        }));
+                     }
+                }
+            }
+            catch (Exception e)
+            {
+                OurUtils.Logger.e("Exception launching auth code request: " + e.Message);
+                OurUtils.Logger.e(e.ToString());
+            }
+            finally
+            {
+                AndroidJNIHelper.DeleteJNIArgArray(objectArray, jArgs);
+            }
         }
 
         /// <summary>Gets the OpenID Connect ID token for authentication with a server backend.</summary>
