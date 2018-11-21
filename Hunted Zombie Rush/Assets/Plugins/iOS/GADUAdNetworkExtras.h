@@ -2,7 +2,7 @@
 
 #import <GoogleMobileAds/GoogleMobileAds.h>
 
-@protocol GADUAdNetworkExtras<NSObject>
+@protocol GADUAdNetworkExtras <NSObject>
 
 - (id<GADAdNetworkExtras>)adNetworkExtrasWithDictionary:
     (NSDictionary<NSString *, NSString *> *)extras;

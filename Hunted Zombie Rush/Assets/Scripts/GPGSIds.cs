@@ -24,12 +24,12 @@
 
 public static class GpgsIds
 {
-        public const string AchievementZombieLikeARockStar = "CgkI6vSnha0eEAIQBQ"; // <GPGSID>
-        public const string AchievementZombieOnARoll = "CgkI6vSnha0eEAIQAw"; // <GPGSID>
-        public const string AchievementZombieOnTheTopOfWorld = "CgkI6vSnha0eEAIQBg"; // <GPGSID>
-        public const string LeaderboardScore = "CgkI6vSnha0eEAIQAQ"; // <GPGSID>
-        public const string AchievementZombieHavingABlast = "CgkI6vSnha0eEAIQBA"; // <GPGSID>
-        public const string AchievementZombieDeadInRush = "CgkI6vSnha0eEAIQAg"; // <GPGSID>
+        public const string achievement_zombie_like_a_rock_star = "CgkI6vSnha0eEAIQBQ"; // <GPGSID>
+        public const string achievement_zombie_on_a_roll = "CgkI6vSnha0eEAIQAw"; // <GPGSID>
+        public const string achievement_zombie_on_the_top_of_world = "CgkI6vSnha0eEAIQBg"; // <GPGSID>
+        public const string leaderboard_score = "CgkI6vSnha0eEAIQAQ"; // <GPGSID>
+        public const string achievement_zombie_having_a_blast = "CgkI6vSnha0eEAIQBA"; // <GPGSID>
+        public const string achievement_zombie_dead_in_rush = "CgkI6vSnha0eEAIQAg"; // <GPGSID>
 
 }
 

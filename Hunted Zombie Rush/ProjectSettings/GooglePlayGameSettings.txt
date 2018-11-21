@@ -1,5 +1,5 @@
-lastUpgrade=00941
-proj.pluginVersion=0.9.41
+lastUpgrade=00953
+proj.pluginVersion=0.9.53
 proj.AppId=1042882886250
 and.BundleId=com.greate43.sk.HuntedZombieRush
 proj.classDir=Assets%2fScripts

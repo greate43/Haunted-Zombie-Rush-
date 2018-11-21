@@ -4,38 +4,29 @@ using UnityEngine;
 
 public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
 {
- 
-
-
-	// Use this for initialization
-	public void Awake ()
-	{
-
-
-            // recommended for debugging:
-       //     PlayGamesPlatform.DebugLogEnabled = true;
+    // Use this for initialization
+    public void Awake()
+    {
+        // recommended for debugging:
+        //     PlayGamesPlatform.DebugLogEnabled = true;
         // Activate the Google Play Games platform
         PlayGamesPlatform.Activate();
 
         ConnectGoogleGameServices();
     }
 
-   
 
     public void ConnectGoogleGameServices()
     {
-
         if (!Social.localUser.authenticated)
         {
             // authenticate user:
-            Social.localUser.Authenticate((bool success) => {
+            Social.localUser.Authenticate((bool success) =>
+            {
                 // handle success or failure
                 if (success)
                 {
-                   
-
-               //     MainMenu.Instance.ActivateLogin(true);
-
+                    //     MainMenu.Instance.ActivateLogin(true);
                 }
                 else
                 {
@@ -43,8 +34,8 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
                 }
             });
         }
-        
     }
+
 //
 //    public void DisconnectGoogleGameServices()
 //    {
@@ -74,13 +65,14 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
     {
         if (Social.localUser.authenticated)
         {
-           Social.ReportScore(score,GpgsIds.LeaderboardScore, (bool success) => {
-               // handle success or failure
-           });
+            Social.ReportScore(score, GpgsIds.leaderboard_score, (bool success) =>
+            {
+                // handle success or failure
+            });
         }
     }
 
-   public void OnLevelScoreWasLoaded()
+    public void OnLevelScoreWasLoaded()
     {
         ReportScore(GameManager.Instance.GetScore());
     }
@@ -90,7 +82,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //when player dies for the first time
-            Social.ReportProgress(GpgsIds.AchievementZombieDeadInRush, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_dead_in_rush, 100.0f, (bool success) =>
             {
                 // handle success or failure
             });
@@ -102,7 +94,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //when player collects 30 coins
-            Social.ReportProgress(GpgsIds.AchievementZombieOnARoll, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_on_a_roll, 100.0f, (bool success) =>
             {
                 // handle success or failure
             });
@@ -114,7 +106,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //when player collects 60 coins
-            Social.ReportProgress(GpgsIds.AchievementZombieHavingABlast, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_having_a_blast, 100.0f, (bool success) =>
             {
                 // handle success or failure
             });
@@ -126,18 +118,19 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //When the player collects 150 coins
-            Social.ReportProgress(GpgsIds.AchievementZombieLikeARockStar, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_like_a_rock_star, 100.0f, (bool success) =>
             {
                 // handle success or failure
             });
         }
     }
+
     public void ZombieOnTheTopOfWorld()
     {
         if (Social.localUser.authenticated)
         {
             //When the player collects 500 coins
-            Social.ReportProgress(GpgsIds.AchievementZombieOnTheTopOfWorld, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_on_the_top_of_world, 100.0f, (bool success) =>
             {
                 // handle success or failure
             });

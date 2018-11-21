@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Api.Mediation;
@@ -62,6 +63,8 @@ namespace GoogleMobileAds.iOS
                 Externs.GADUSetExtra(requestPtr, entry.Key, entry.Value);
             }
 
+            Externs.GADUSetExtra(requestPtr, "is_unity", "1");
+
             foreach (MediationExtras mediationExtra in request.MediationExtras)
             {
                 IntPtr mutableDictionaryPtr = Externs.GADUCreateMutableDictionary();
@@ -84,6 +87,12 @@ namespace GoogleMobileAds.iOS
 
             Externs.GADUSetRequestAgent(requestPtr, "unity-" + AdRequest.Version);
             return requestPtr;
+        }
+
+        public static string PtrToString(IntPtr stringPtr) {
+            string managedString = Marshal.PtrToStringAnsi(stringPtr);
+            Marshal.FreeHGlobal(stringPtr);
+            return managedString;
         }
 
     }
