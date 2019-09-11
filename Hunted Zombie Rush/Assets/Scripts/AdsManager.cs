@@ -13,28 +13,30 @@ public class AdsManager : Singleton<AdsManager>
 
     private void Start()
     {
-//        // Reward based video instance is a singleton. Register handlers once to
-//        // avoid duplicate events.
-//
-//        _extraLivesVideosRewards = RewardBasedVideoAd.Instance;
-//
-//        // Ad event fired when the rewarded video ad
-//        // has been received.
-//        _extraLivesVideosRewards.OnAdLoaded += HandleRewardBasedVideoLoaded;
-//        // has failed to load.
-//        _extraLivesVideosRewards.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
-//        // is opened.
-//        _extraLivesVideosRewards.OnAdOpening += HandleRewardBasedVideoOpened;
-//        // has started playing.
-//        _extraLivesVideosRewards.OnAdStarted += HandleRewardBasedVideoStarted;
-//        // has rewarded the user.
-//        _extraLivesVideosRewards.OnAdRewarded += HandleRewardBasedVideoRewarded;
-//        // is closed.
-//        _extraLivesVideosRewards.OnAdClosed += HandleRewardBasedVideoClosed;
-//        // is leaving the application.
-//        _extraLivesVideosRewards.OnAdLeavingApplication += HandleRewardBasedVideoLeftApplication;
-// 
-    
+        MobileAds.Initialize(initStatus => { });
+
+        //        // Reward based video instance is a singleton. Register handlers once to
+        //        // avoid duplicate events.
+        //
+        //        _extraLivesVideosRewards = RewardBasedVideoAd.Instance;
+        //
+        //        // Ad event fired when the rewarded video ad
+        //        // has been received.
+        //        _extraLivesVideosRewards.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        //        // has failed to load.
+        //        _extraLivesVideosRewards.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+        //        // is opened.
+        //        _extraLivesVideosRewards.OnAdOpening += HandleRewardBasedVideoOpened;
+        //        // has started playing.
+        //        _extraLivesVideosRewards.OnAdStarted += HandleRewardBasedVideoStarted;
+        //        // has rewarded the user.
+        //        _extraLivesVideosRewards.OnAdRewarded += HandleRewardBasedVideoRewarded;
+        //        // is closed.
+        //        _extraLivesVideosRewards.OnAdClosed += HandleRewardBasedVideoClosed;
+        //        // is leaving the application.
+        //        _extraLivesVideosRewards.OnAdLeavingApplication += HandleRewardBasedVideoLeftApplication;
+        // 
+
     }
 
 

@@ -1,4 +1,5 @@
 ﻿using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using UnityEngine;
 
 public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
@@ -9,7 +10,14 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         // recommended for debugging:
         //     PlayGamesPlatform.DebugLogEnabled = true;
         // Activate the Google Play Games platform
+
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+            .RequestEmail()
+            .Build();
+        PlayGamesPlatform.InitializeInstance(config);
+
         PlayGamesPlatform.Activate();
+
         ConnectGoogleGameServices();
     }
 
