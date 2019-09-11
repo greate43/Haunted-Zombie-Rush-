@@ -13,7 +13,7 @@
 //  See the License for the specific language governing permissions and
 //    limitations under the License.
 // </copyright>
-#if (UNITY_ANDROID || (UNITY_IPHONE && !NO_GPGS))
+#if UNITY_ANDROID
 
 namespace GooglePlayGames.BasicApi
 {
@@ -179,17 +179,6 @@ namespace GooglePlayGames.BasicApi
             {
                 callback.Invoke(null);
             }
-        }
-
-        /// <summary>
-        /// Returns the achievement corresponding to the passed achievement identifier.
-        /// </summary>
-        /// <returns>The achievement.</returns>
-        /// <param name="achId">Achievement identifier.</param>
-        public Achievement GetAchievement(string achId)
-        {
-            LogUsage();
-            return null;
         }
 
         /// <summary>

@@ -14,8 +14,11 @@
 
 #if UNITY_IOS
 
+using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
+using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
 
 namespace GoogleMobileAds.iOS
@@ -23,8 +26,14 @@ namespace GoogleMobileAds.iOS
     public class MobileAdsClient : IMobileAdsClient
     {
         private static MobileAdsClient instance = new MobileAdsClient();
+        private Action<InitializationStatus> initCompleteAction;
+        private IntPtr mobileAdsClientPtr;
+        internal delegate void GADUInitializationCompleteCallback(IntPtr mobileAdsClient, IntPtr initStatusClient);
 
-        private MobileAdsClient(){}
+        private MobileAdsClient()
+        {
+            this.mobileAdsClientPtr = (IntPtr)GCHandle.Alloc(this);
+        }
 
         public static MobileAdsClient Instance
         {
@@ -37,6 +46,12 @@ namespace GoogleMobileAds.iOS
         public void Initialize(string appId)
         {
             Externs.GADUInitialize(appId);
+        }
+
+        public void Initialize(Action<InitializationStatus> initCompleteAction)
+        {
+            this.initCompleteAction = initCompleteAction;
+            Externs.GADUInitializeWithCallback(this.mobileAdsClientPtr, InitializationCompleteCallback);
         }
 
         public void SetApplicationVolume(float volume)
@@ -52,6 +67,38 @@ namespace GoogleMobileAds.iOS
         public void SetiOSAppPauseOnBackground(bool pause)
         {
             Externs.GADUSetiOSAppPauseOnBackground(pause);
+        }
+
+        public float GetDeviceScale()
+        {
+            return Externs.GADUDeviceScale();
+        }
+
+        [MonoPInvokeCallback(typeof(GADUInitializationCompleteCallback))]
+        private static void InitializationCompleteCallback(IntPtr mobileAdsClient, IntPtr initStatus)
+        {
+            MobileAdsClient client = IntPtrToMobileAdsClient(mobileAdsClient);
+            if (client.initCompleteAction != null)
+            {
+                InitializationStatus status = new InitializationStatus(new InitializationStatusClient(initStatus));
+                client.initCompleteAction(status);
+            }
+        }
+
+        private static MobileAdsClient IntPtrToMobileAdsClient(IntPtr mobileAdsClient)
+        {
+            GCHandle handle = (GCHandle)mobileAdsClient;
+            return handle.Target as MobileAdsClient;
+        }
+
+        public void Dispose()
+        {
+            ((GCHandle)this.mobileAdsClientPtr).Free();
+        }
+
+        ~MobileAdsClient()
+        {
+            this.Dispose();
         }
     }
 }

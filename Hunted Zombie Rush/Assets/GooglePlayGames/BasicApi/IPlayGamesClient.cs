@@ -14,7 +14,7 @@
 //    limitations under the License.
 // </copyright>
 
-#if (UNITY_ANDROID || (UNITY_IPHONE && !NO_GPGS))
+#if UNITY_ANDROID
 
 namespace GooglePlayGames.BasicApi
 {
@@ -155,13 +155,6 @@ namespace GooglePlayGames.BasicApi
     /// <param name="callback">Callback.</param>
     void LoadUsers(string[] userIds, Action<IUserProfile[]> callback);
 
-    /// <summary>
-    /// Returns the achievement corresponding to the passed achievement identifier.
-    /// </summary>
-    /// <returns>The achievement corresponding to the identifer. <code>null</code> if no such
-    /// achievement is found or if authentication has not occurred.</returns>
-    /// <param name="achievementId">The identifier of the achievement.</param>
-    Achievement GetAchievement(string achievementId);
 
     /// <summary>
     /// Loads the achievements for the current signed in user and invokes

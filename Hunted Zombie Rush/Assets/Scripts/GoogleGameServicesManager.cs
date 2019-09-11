@@ -1,7 +1,6 @@
 ﻿using GooglePlayGames;
 using UnityEngine;
 
-
 public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
 {
     // Use this for initialization
@@ -11,7 +10,6 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         //     PlayGamesPlatform.DebugLogEnabled = true;
         // Activate the Google Play Games platform
         PlayGamesPlatform.Activate();
-
         ConnectGoogleGameServices();
     }
 
@@ -21,7 +19,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (!Social.localUser.authenticated)
         {
             // authenticate user:
-            Social.localUser.Authenticate((bool success) =>
+            Social.localUser.Authenticate(success =>
             {
                 // handle success or failure
                 if (success)
@@ -65,7 +63,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
     {
         if (Social.localUser.authenticated)
         {
-            Social.ReportScore(score, GpgsIds.leaderboard_score, (bool success) =>
+            Social.ReportScore(score, GpgsIds.leaderboard_score, success =>
             {
                 // handle success or failure
             });
@@ -82,7 +80,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //when player dies for the first time
-            Social.ReportProgress(GpgsIds.achievement_zombie_dead_in_rush, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_dead_in_rush, 100.0f, success =>
             {
                 // handle success or failure
             });
@@ -94,7 +92,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //when player collects 30 coins
-            Social.ReportProgress(GpgsIds.achievement_zombie_on_a_roll, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_on_a_roll, 100.0f, success =>
             {
                 // handle success or failure
             });
@@ -106,7 +104,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //when player collects 60 coins
-            Social.ReportProgress(GpgsIds.achievement_zombie_having_a_blast, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_having_a_blast, 100.0f, success =>
             {
                 // handle success or failure
             });
@@ -118,7 +116,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //When the player collects 150 coins
-            Social.ReportProgress(GpgsIds.achievement_zombie_like_a_rock_star, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_like_a_rock_star, 100.0f, success =>
             {
                 // handle success or failure
             });
@@ -130,7 +128,7 @@ public class GoogleGameServicesManager : Singleton<GoogleGameServicesManager>
         if (Social.localUser.authenticated)
         {
             //When the player collects 500 coins
-            Social.ReportProgress(GpgsIds.achievement_zombie_on_the_top_of_world, 100.0f, (bool success) =>
+            Social.ReportProgress(GpgsIds.achievement_zombie_on_the_top_of_world, 100.0f, success =>
             {
                 // handle success or failure
             });
