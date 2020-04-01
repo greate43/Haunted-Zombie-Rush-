@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if UNITY_IOS
-
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -74,6 +72,11 @@ namespace GoogleMobileAds.iOS
             return Externs.GADUDeviceScale();
         }
 
+        public int GetDeviceSafeWidth()
+        {
+            return Externs.GADUDeviceSafeWidth();
+        }
+
         [MonoPInvokeCallback(typeof(GADUInitializationCompleteCallback))]
         private static void InitializationCompleteCallback(IntPtr mobileAdsClient, IntPtr initStatus)
         {
@@ -103,4 +106,4 @@ namespace GoogleMobileAds.iOS
     }
 }
 
-#endif
+

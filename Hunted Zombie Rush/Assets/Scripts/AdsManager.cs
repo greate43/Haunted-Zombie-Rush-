@@ -69,20 +69,20 @@ public class AdsManager : Singleton<AdsManager>
         _interstitial.LoadAd(CreateAdRequest());
     }
 
-//    public void RequestRewardBasedVideo()
-//    {
-//#if UNITY_EDITOR
-//        var adUnitId = "unused";
-//#elif UNITY_ANDROID
-//        string adUnitId = "ca-app-pub-6743313647495679/8141927146";
-//#elif UNITY_IPHONE
-//        string adUnitId = "INSERT_AD_UNIT_HERE";
-//#else
-//        string adUnitId = "unexpected_platform";
-//#endif
-//        ShowToast.Instance.ShowMyToastMethod("Requesting Rewards Based Videos Ads");
-//       _extraLivesVideosRewards.LoadAd(CreateAdRequest(), adUnitId);
-//    }
+    //    public void RequestRewardBasedVideo()
+    //    {
+    //#if UNITY_EDITOR
+    //        var adUnitId = "unused";
+    //#elif UNITY_ANDROID
+    //        string adUnitId = "ca-app-pub-8958772062363715/1696168700";
+    //#elif UNITY_IPHONE
+    //        string adUnitId = "INSERT_AD_UNIT_HERE";
+    //#else
+    //        string adUnitId = "unexpected_platform";
+    //#endif
+    //        ShowToast.Instance.ShowMyToastMethod("Requesting Rewards Based Videos Ads");
+    //       _extraLivesVideosRewards.LoadAd(CreateAdRequest(), adUnitId);
+    //    }
 
 
     private AdRequest CreateAdRequest()

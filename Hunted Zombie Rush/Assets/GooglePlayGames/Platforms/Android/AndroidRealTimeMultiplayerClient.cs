@@ -1,4 +1,6 @@
 #if UNITY_ANDROID
+#pragma warning disable 0168 // The variable 'var' is declared but never used
+#pragma warning disable 0642 // Possible mistaken empty statement
 
 namespace GooglePlayGames.Android
 {
@@ -31,7 +33,7 @@ namespace GooglePlayGames.Android
 
         private AndroidJavaObject mRoom;
         private AndroidJavaObject mRoomConfig;
-        private RealTimeMultiplayerListener mListener;
+        private OnGameThreadForwardingListener mListener;
         private Invitation mInvitation;
 
         public AndroidRealTimeMultiplayerClient(AndroidClient androidClient, AndroidJavaObject account)
@@ -56,12 +58,13 @@ namespace GooglePlayGames.Android
             ulong exclusiveBitMask,
             RealTimeMultiplayerListener listener)
         {
+            var listenerOnGameThread = new OnGameThreadForwardingListener(listener);
             lock (mSessionLock)
             {
                 if (GetRoomStatus() == RoomStatus.Active)
                 {
                     OurUtils.Logger.e("Received attempt to create a new room without cleaning up the old one.");
-                    listener.OnRoomConnected(false);
+                    listenerOnGameThread.OnRoomConnected(false);
                     return;
                 }
 
@@ -70,7 +73,7 @@ namespace GooglePlayGames.Android
                     new AndroidJavaClass("com.google.android.gms.games.multiplayer.realtime.RoomConfig"))
                 using (var roomUpdateCallback = new AndroidJavaObject(
                     "com.google.games.bridge.RoomUpdateCallbackProxy",
-                    new RoomUpdateCallbackProxy( /* parent= */ this, listener)))
+                    new RoomUpdateCallbackProxy( /* parent= */ this, listenerOnGameThread)))
                 using (var roomConfigBuilder =
                     roomConfigClass.CallStatic<AndroidJavaObject>("builder", roomUpdateCallback))
                 {
@@ -87,20 +90,20 @@ namespace GooglePlayGames.Android
 
                     using (var messageReceivedListener = new AndroidJavaObject(
                         "com.google.games.bridge.RealTimeMessageReceivedListenerProxy",
-                        new MessageReceivedListenerProxy(listener)))
+                        new MessageReceivedListenerProxy(listenerOnGameThread)))
                     using (roomConfigBuilder.Call<AndroidJavaObject>("setOnMessageReceivedListener",
                         messageReceivedListener))
                         ;
 
                     using (var roomStatusUpdateCallback = new AndroidJavaObject(
                         "com.google.games.bridge.RoomStatusUpdateCallbackProxy",
-                        new RoomStatusUpdateCallbackProxy(this, listener)))
+                        new RoomStatusUpdateCallbackProxy(this, listenerOnGameThread)))
                     using (roomConfigBuilder.Call<AndroidJavaObject>("setRoomStatusUpdateCallback",
                         roomStatusUpdateCallback))
                         ;
 
                     mRoomConfig = roomConfigBuilder.Call<AndroidJavaObject>("build");
-                    mListener = listener;
+                    mListener = listenerOnGameThread;
                 }
 
                 mMinPlayersToStart = (int) minOpponents + 1;
@@ -111,7 +114,7 @@ namespace GooglePlayGames.Android
                         task,
                         e =>
                         {
-                            listener.OnRoomConnected(false);
+                            listenerOnGameThread.OnRoomConnected(false);
                             CleanSession();
                         });
                 }
@@ -121,12 +124,13 @@ namespace GooglePlayGames.Android
         public void CreateWithInvitationScreen(uint minOpponents, uint maxOpponents, uint variant,
             RealTimeMultiplayerListener listener)
         {
+            var listenerOnGameThread = new OnGameThreadForwardingListener(listener);
             lock (mSessionLock)
             {
                 if (GetRoomStatus() == RoomStatus.Active)
                 {
                     OurUtils.Logger.e("Received attempt to create a new room without cleaning up the old one.");
-                    listener.OnRoomConnected(false);
+                    listenerOnGameThread.OnRoomConnected(false);
                     return;
                 }
 
@@ -137,15 +141,15 @@ namespace GooglePlayGames.Android
                         {
                             mAndroidClient.SignOut((() =>
                             {
-                                listener.OnRoomConnected(false);
+                                listenerOnGameThread.OnRoomConnected(false);
                                 CleanSession();
                             }));
                             return;
                         }
-                        
+
                         if (status != UIStatus.Valid)
                         {
-                            listener.OnRoomConnected(false);
+                            listenerOnGameThread.OnRoomConnected(false);
                             CleanSession();
                             return;
                         }
@@ -154,7 +158,7 @@ namespace GooglePlayGames.Android
                             new AndroidJavaClass("com.google.android.gms.games.multiplayer.realtime.RoomConfig"))
                         using (var roomUpdateCallback = new AndroidJavaObject(
                             "com.google.games.bridge.RoomUpdateCallbackProxy",
-                            new RoomUpdateCallbackProxy( /* parent= */ this, listener)))
+                            new RoomUpdateCallbackProxy( /* parent= */ this, listenerOnGameThread)))
                         using (var roomConfigBuilder =
                             roomConfigClass.CallStatic<AndroidJavaObject>("builder", roomUpdateCallback))
                         {
@@ -176,14 +180,14 @@ namespace GooglePlayGames.Android
                             using (var messageReceivedListener =
                                 new AndroidJavaObject(
                                     "com.google.games.bridge.RealTimeMessageReceivedListenerProxy",
-                                    new MessageReceivedListenerProxy(listener)))
+                                    new MessageReceivedListenerProxy(listenerOnGameThread)))
                             using (roomConfigBuilder.Call<AndroidJavaObject>("setOnMessageReceivedListener",
                                 messageReceivedListener))
                                 ;
 
                             using (var roomStatusUpdateCallback =
                                 new AndroidJavaObject("com.google.games.bridge.RoomStatusUpdateCallbackProxy",
-                                    new RoomStatusUpdateCallbackProxy(this, listener)))
+                                    new RoomStatusUpdateCallbackProxy(this, listenerOnGameThread)))
                             using (roomConfigBuilder.Call<AndroidJavaObject>("setRoomStatusUpdateCallback",
                                 roomStatusUpdateCallback))
                                 ;
@@ -194,7 +198,7 @@ namespace GooglePlayGames.Android
                                 mRoomConfig = roomConfigBuilder.Call<AndroidJavaObject>("build");
                             }
 
-                            mListener = listener;
+                            mListener = listenerOnGameThread;
                         }
 
                         // the min number to start is the number of automatched + the number of named invitations +
@@ -207,7 +211,7 @@ namespace GooglePlayGames.Android
                                 task,
                                 exception =>
                                 {
-                                    listener.OnRoomConnected(false);
+                                    listenerOnGameThread.OnRoomConnected(false);
                                     CleanSession();
                                 });
                         }
@@ -288,13 +292,14 @@ namespace GooglePlayGames.Android
 
         public void AcceptFromInbox(RealTimeMultiplayerListener listener)
         {
+            var listenerOnGameThread = new OnGameThreadForwardingListener(listener);
             lock (mSessionLock)
             {
                 if (GetRoomStatus() == RoomStatus.Active)
                 {
                     OurUtils.Logger.e("Received attempt to accept invitation without cleaning up " +
                                       "active session.");
-                    listener.OnRoomConnected(false);
+                    listenerOnGameThread.OnRoomConnected(false);
                     return;
                 }
 
@@ -302,14 +307,14 @@ namespace GooglePlayGames.Android
                 {
                     if (status == UIStatus.NotAuthorized)
                     {
-                        mAndroidClient.SignOut((() => listener.OnRoomConnected(false)));
+                        mAndroidClient.SignOut((() => listenerOnGameThread.OnRoomConnected(false)));
                         return;
                     }
-                    
+
                     if (status != UIStatus.Valid)
                     {
                         OurUtils.Logger.d("User did not complete invitation screen.");
-                        listener.OnRoomConnected(false);
+                        listenerOnGameThread.OnRoomConnected(false);
                         return;
                     }
 
@@ -322,17 +327,18 @@ namespace GooglePlayGames.Android
 
         public void AcceptInvitation(string invitationId, RealTimeMultiplayerListener listener)
         {
+            var listenerOnGameThread = new OnGameThreadForwardingListener(listener);
             lock (mSessionLock)
             {
                 if (GetRoomStatus() == RoomStatus.Active)
                 {
                     OurUtils.Logger.e("Received attempt to accept invitation without cleaning up " +
                                       "active session.");
-                    listener.OnRoomConnected(false);
+                    listenerOnGameThread.OnRoomConnected(false);
                     return;
                 }
 
-                FindInvitation(invitationId, fail => listener.OnRoomConnected(false),
+                FindInvitation(invitationId, fail => listenerOnGameThread.OnRoomConnected(false),
                     invitation =>
                     {
                         mInvitation = invitation;
@@ -341,24 +347,24 @@ namespace GooglePlayGames.Android
                             new AndroidJavaClass("com.google.android.gms.games.multiplayer.realtime.RoomConfig"))
                         using (var roomUpdateCallback = new AndroidJavaObject(
                             "com.google.games.bridge.RoomUpdateCallbackProxy",
-                            new RoomUpdateCallbackProxy( /* parent= */ this, listener)))
+                            new RoomUpdateCallbackProxy( /* parent= */ this, listenerOnGameThread)))
                         using (var roomConfigBuilder =
                             roomConfigClass.CallStatic<AndroidJavaObject>("builder", roomUpdateCallback))
                         using (var messageReceivedListener =
                             new AndroidJavaObject(
                                 "com.google.games.bridge.RealTimeMessageReceivedListenerProxy",
-                                new MessageReceivedListenerProxy(listener)))
+                                new MessageReceivedListenerProxy(listenerOnGameThread)))
                         using (roomConfigBuilder.Call<AndroidJavaObject>("setOnMessageReceivedListener",
                             messageReceivedListener))
                         using (var roomStatusUpdateCallback =
                             new AndroidJavaObject("com.google.games.bridge.RoomStatusUpdateCallbackProxy",
-                                new RoomStatusUpdateCallbackProxy(this, listener)))
+                                new RoomStatusUpdateCallbackProxy(this, listenerOnGameThread)))
                         using (roomConfigBuilder.Call<AndroidJavaObject>("setRoomStatusUpdateCallback",
                             roomStatusUpdateCallback))
                         using (roomConfigBuilder.Call<AndroidJavaObject>("setInvitationIdToAccept", invitationId))
                         {
                             mRoomConfig = roomConfigBuilder.Call<AndroidJavaObject>("build");
-                            mListener = listener;
+                            mListener = listenerOnGameThread;
 
                             using (var task = mRtmpClient.Call<AndroidJavaObject>("join", mRoomConfig))
                             {
@@ -366,7 +372,7 @@ namespace GooglePlayGames.Android
                                     task,
                                     e =>
                                     {
-                                        listener.OnRoomConnected(false);
+                                        listenerOnGameThread.OnRoomConnected(false);
                                         CleanSession();
                                     });
                             }
@@ -477,7 +483,7 @@ namespace GooglePlayGames.Android
         {
             foreach (var participant in GetParticipantList())
             {
-                if (participant.Player.id.Equals(mAndroidClient.GetUserId()))
+                if (participant.Player != null && participant.Player.id.Equals(mAndroidClient.GetUserId()))
                 {
                     return participant;
                 }
@@ -589,11 +595,11 @@ namespace GooglePlayGames.Android
 
         private class RoomStatusUpdateCallbackProxy : AndroidJavaProxy
         {
-            private RealTimeMultiplayerListener mListener;
+            private OnGameThreadForwardingListener mListener;
             private AndroidRealTimeMultiplayerClient mParent;
 
             public RoomStatusUpdateCallbackProxy(AndroidRealTimeMultiplayerClient parent,
-                RealTimeMultiplayerListener listener) : base(
+                OnGameThreadForwardingListener listener) : base(
                 "com/google/games/bridge/RoomStatusUpdateCallbackProxy$Callback")
             {
                 mListener = listener;
@@ -763,9 +769,9 @@ namespace GooglePlayGames.Android
 
         private class MessageReceivedListenerProxy : AndroidJavaProxy
         {
-            private RealTimeMultiplayerListener mListener;
+            private OnGameThreadForwardingListener mListener;
 
-            public MessageReceivedListenerProxy(RealTimeMultiplayerListener listener) : base(
+            public MessageReceivedListenerProxy(OnGameThreadForwardingListener listener) : base(
                 "com/google/games/bridge/RealTimeMessageReceivedListenerProxy$Callback")
             {
                 mListener = listener;
@@ -779,11 +785,12 @@ namespace GooglePlayGames.Android
 
         private class RoomUpdateCallbackProxy : AndroidJavaProxy
         {
-            private RealTimeMultiplayerListener mListener;
+            private OnGameThreadForwardingListener mListener;
             private AndroidRealTimeMultiplayerClient mParent;
 
             public RoomUpdateCallbackProxy(AndroidRealTimeMultiplayerClient parent,
-                RealTimeMultiplayerListener listener) : base("com/google/games/bridge/RoomUpdateCallbackProxy$Callback")
+                OnGameThreadForwardingListener listener) : base(
+                "com/google/games/bridge/RoomUpdateCallbackProxy$Callback")
             {
                 mListener = listener;
                 mParent = parent;
@@ -847,6 +854,57 @@ namespace GooglePlayGames.Android
 
                 mParent.mRoom = room;
                 mListener.OnRoomConnected(true);
+            }
+        }
+
+        /// <summary>
+        /// Simple forwarding wrapper that makes sure all callbacks occur on the game thread.
+        /// </summary>
+        class OnGameThreadForwardingListener
+        {
+            private readonly RealTimeMultiplayerListener mListener;
+
+            internal OnGameThreadForwardingListener(RealTimeMultiplayerListener listener)
+            {
+                mListener = Misc.CheckNotNull(listener);
+            }
+
+            public void OnRoomSetupProgress(float percent)
+            {
+                PlayGamesHelperObject.RunOnGameThread(() => mListener.OnRoomSetupProgress(percent));
+            }
+
+            public void OnRoomConnected(bool success)
+            {
+                PlayGamesHelperObject.RunOnGameThread(() => mListener.OnRoomConnected(success));
+            }
+
+            public void OnLeftRoom()
+            {
+                PlayGamesHelperObject.RunOnGameThread(() => mListener.OnLeftRoom());
+            }
+
+            public void OnPeersConnected(string[] participantIds)
+            {
+                PlayGamesHelperObject.RunOnGameThread(() => mListener.OnPeersConnected(participantIds));
+            }
+
+            public void OnPeersDisconnected(string[] participantIds)
+            {
+                PlayGamesHelperObject.RunOnGameThread(
+                    () => mListener.OnPeersDisconnected(participantIds));
+            }
+
+            public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
+            {
+                PlayGamesHelperObject.RunOnGameThread(
+                    () => mListener.OnRealTimeMessageReceived(isReliable, senderId, data));
+            }
+
+            public void OnParticipantLeft(Participant participant)
+            {
+                PlayGamesHelperObject.RunOnGameThread(
+                    () => mListener.OnParticipantLeft(participant));
             }
         }
 

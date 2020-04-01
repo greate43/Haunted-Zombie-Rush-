@@ -14,6 +14,8 @@
 
 using System;
 
+
+using GoogleMobileAds;
 using GoogleMobileAds.Common;
 
 namespace GoogleMobileAds.Api
@@ -24,6 +26,11 @@ namespace GoogleMobileAds.Api
             // Returns the device's scale.
             public static float GetDeviceScale() {
                 return client.GetDeviceScale();
+            }
+
+            // Returns the safe width for the current device.
+            public static int GetDeviceSafeWidth() {
+                return client.GetDeviceSafeWidth();
             }
         }
         private static readonly IMobileAdsClient client = GetMobileAdsClient();

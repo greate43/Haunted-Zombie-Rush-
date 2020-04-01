@@ -1,4 +1,6 @@
 #if UNITY_ANDROID
+#pragma warning disable 0168 // The variable 'var' is declared but never used
+#pragma warning disable 0642 // Possible mistaken empty statement
 
 namespace GooglePlayGames.Android
 {
@@ -83,7 +85,7 @@ namespace GooglePlayGames.Android
                         mAndroidClient.SignOut((() => callback(status, null)));
                         return;
                     }
-                    
+
                     if (status != UIStatus.Valid)
                     {
                         callback(status, null);
@@ -285,7 +287,7 @@ namespace GooglePlayGames.Android
                     mAndroidClient.SignOut(() => callback(false, null));
                     return;
                 }
-                
+
                 if (status != UIStatus.Valid)
                 {
                     callback(false, null);

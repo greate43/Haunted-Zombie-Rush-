@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#if UNITY_ANDROID
-
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -84,6 +82,10 @@ namespace GoogleMobileAds.Android
         public const string UnityAdLoaderListenerClassName =
             "com.google.unity.ads.UnityAdLoaderListener";
 
+        public const string UnityPaidEventListenerClassName =
+            "com.google.unity.ads.UnityPaidEventListener";
+
+
         public const string PluginUtilsClassName = "com.google.unity.ads.PluginUtils";
 
         #endregion
@@ -98,6 +100,7 @@ namespace GoogleMobileAds.Android
 
         public const string BundleClassName = "android.os.Bundle";
         public const string DateClassName = "java.util.Date";
+        public const string DisplayMetricsClassName = "android.util.DisplayMetrics";
 
         #endregion
 
@@ -107,15 +110,38 @@ namespace GoogleMobileAds.Android
 
         public static AndroidJavaObject GetAdSizeJavaObject(AdSize adSize)
         {
-            if (adSize.IsSmartBanner)
-            {
-                return new AndroidJavaClass(AdSizeClassName)
-                        .GetStatic<AndroidJavaObject>("SMART_BANNER");
-            }
-            else
-            {
-                return new AndroidJavaObject(AdSizeClassName, adSize.Width, adSize.Height);
-            }
+            switch (adSize.AdType) {
+                case AdSize.Type.SmartBanner:
+                    // AndroidJavaClass.GetStatic<AndroidJavaObject>() returns null since Unity 2019.2.
+                    // Creates an AdSize object by directly calling the constructor, as a workaround.
+                    return new AndroidJavaObject(AdSizeClassName, -1, -2)
+                            .GetStatic<AndroidJavaObject>("SMART_BANNER");
+                case AdSize.Type.AnchoredAdaptive:
+                    AndroidJavaClass adSizeClass = new AndroidJavaClass(AdSizeClassName);
+                    AndroidJavaClass playerClass = new AndroidJavaClass(Utils.UnityActivityClassName);
+                    AndroidJavaObject activity =
+                        playerClass.GetStatic<AndroidJavaObject>("currentActivity");
+                    switch (adSize.Orientation)
+                    {
+                        case Orientation.Landscape:
+                            return adSizeClass.CallStatic<AndroidJavaObject>("getLandscapeBannerAdSizeWithWidth", activity, adSize.Width);
+                        case Orientation.Portrait:
+                            return adSizeClass.CallStatic<AndroidJavaObject>("getPortraitBannerAdSizeWithWidth", activity, adSize.Width);
+                        case Orientation.Current:
+                            return adSizeClass.CallStatic<AndroidJavaObject>("getCurrentOrientationBannerAdSizeWithWidth", activity, adSize.Width);
+                        default:
+                            throw new ArgumentException("Invalid Orientation provided for ad size.");
+                    }
+                case AdSize.Type.Standard:
+                    return new AndroidJavaObject(AdSizeClassName, adSize.Width, adSize.Height);
+                default:
+                    throw new ArgumentException("Invalid AdSize.Type provided for ad size.");
+  }
+        }
+
+        internal static int GetScreenWidth() {
+          DisplayMetrics metrics = new DisplayMetrics();
+          return (int) (metrics.WidthPixels / metrics.Density);
         }
 
         public static AndroidJavaObject GetAdRequestJavaObject(AdRequest request)
@@ -237,4 +263,3 @@ namespace GoogleMobileAds.Android
         #endregion
     }
 }
-#endif

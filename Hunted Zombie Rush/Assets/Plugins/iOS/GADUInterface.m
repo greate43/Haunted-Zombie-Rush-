@@ -124,6 +124,18 @@ float GADUDeviceScale() {
   return UIScreen.mainScreen.scale;
 }
 
+/// Returns the safe width of the device.
+int GADUDeviceSafeWidth() {
+  CGRect screenBounds = [UIScreen mainScreen].bounds;
+  if (GADUIsOperatingSystemAtLeastVersion(11)) {
+    CGRect safeFrame = [UIApplication sharedApplication].keyWindow.safeAreaLayoutGuide.layoutFrame;
+    if (!CGSizeEqualToSize(safeFrame.size, CGSizeZero)) {
+      screenBounds = safeFrame;
+    }
+  }
+  return (int)CGRectGetWidth(screenBounds);
+}
+
 /// Creates a GADBannerView with the specified width, height, and position. Returns a reference to
 /// the GADUBannerView.
 GADUTypeBannerRef GADUCreateBannerView(GADUTypeBannerClientRef *bannerClient, const char *adUnitID,
@@ -181,6 +193,40 @@ GADUTypeBannerRef GADUCreateSmartBannerViewWithCustomPosition(GADUTypeBannerClie
       initWithSmartBannerSizeAndBannerClientReference:bannerClient
                                              adUnitID:GADUStringFromUTF8String(adUnitID)
                                      customAdPosition:adPosition];
+  GADUObjectCache *cache = [GADUObjectCache sharedInstance];
+  [cache.references setObject:banner forKey:[banner gadu_referenceKey]];
+  return (__bridge GADUTypeBannerRef)banner;
+}
+
+/// Creates a an adaptive sized GADBannerView with the specified width, orientation, and position.
+/// Returns a reference to the GADUBannerView.
+GADUTypeBannerRef GADUCreateAnchoredAdaptiveBannerView(GADUTypeBannerClientRef *bannerClient,
+                                               const char *adUnitID, NSInteger width,
+                                               GADUBannerOrientation orientation,
+                                               GADAdPosition adPosition) {
+  GADUBanner *banner = [[GADUBanner alloc]
+      initWithAdaptiveBannerSizeAndBannerClientReference:bannerClient
+                                                adUnitID:GADUStringFromUTF8String(adUnitID)
+                                                   width:(int)width
+                                             orientation:orientation
+                                              adPosition:adPosition];
+  GADUObjectCache *cache = [GADUObjectCache sharedInstance];
+  [cache.references setObject:banner forKey:[banner gadu_referenceKey]];
+  return (__bridge GADUTypeBannerRef)banner;
+}
+
+/// Creates a an adaptive sized GADBannerView with the specified width, orientation, and position.
+/// Returns a reference to the GADUBannerView.
+GADUTypeBannerRef GADUCreateAnchoredAdaptiveBannerViewWithCustomPosition(
+    GADUTypeBannerClientRef *bannerClient, const char *adUnitID, NSInteger width,
+    GADUBannerOrientation orientation, NSInteger x, NSInteger y) {
+  CGPoint adPosition = CGPointMake(x, y);
+  GADUBanner *banner = [[GADUBanner alloc]
+      initWithAdaptiveBannerSizeAndBannerClientReference:bannerClient
+                                                adUnitID:GADUStringFromUTF8String(adUnitID)
+                                                   width:(int)width
+                                             orientation:orientation
+                                        customAdPosition:adPosition];
   GADUObjectCache *cache = [GADUObjectCache sharedInstance];
   [cache.references setObject:banner forKey:[banner gadu_referenceKey]];
   return (__bridge GADUTypeBannerRef)banner;
@@ -250,13 +296,16 @@ void GADUSetBannerCallbacks(GADUTypeBannerRef banner,
                             GADUAdViewDidFailToReceiveAdWithErrorCallback adFailedCallback,
                             GADUAdViewWillPresentScreenCallback willPresentCallback,
                             GADUAdViewDidDismissScreenCallback didDismissCallback,
-                            GADUAdViewWillLeaveApplicationCallback willLeaveCallback) {
+                            GADUAdViewWillLeaveApplicationCallback willLeaveCallback,
+                            GADUAdViewPaidEventCallback paidEventCallback) {
   GADUBanner *internalBanner = (__bridge GADUBanner *)banner;
   internalBanner.adReceivedCallback = adReceivedCallback;
   internalBanner.adFailedCallback = adFailedCallback;
   internalBanner.willPresentCallback = willPresentCallback;
   internalBanner.didDismissCallback = didDismissCallback;
   internalBanner.willLeaveCallback = willLeaveCallback;
+
+  internalBanner.paidEventCallback = paidEventCallback;
 }
 
 /// Sets the interstitial callback methods to be invoked during interstitial ad events.
@@ -265,13 +314,16 @@ void GADUSetInterstitialCallbacks(
     GADUInterstitialDidFailToReceiveAdWithErrorCallback adFailedCallback,
     GADUInterstitialWillPresentScreenCallback willPresentCallback,
     GADUInterstitialDidDismissScreenCallback didDismissCallback,
-    GADUInterstitialWillLeaveApplicationCallback willLeaveCallback) {
+    GADUInterstitialWillLeaveApplicationCallback willLeaveCallback,
+    GADUInterstitialPaidEventCallback paidEventCallback) {
   GADUInterstitial *internalInterstitial = (__bridge GADUInterstitial *)interstitial;
   internalInterstitial.adReceivedCallback = adReceivedCallback;
   internalInterstitial.adFailedCallback = adFailedCallback;
   internalInterstitial.willPresentCallback = willPresentCallback;
   internalInterstitial.didDismissCallback = didDismissCallback;
   internalInterstitial.willLeaveCallback = willLeaveCallback;
+
+  internalInterstitial.paidEventCallback = paidEventCallback;
 }
 
 /// Sets the reward based video callback methods to be invoked during reward based video ad events.
@@ -303,7 +355,8 @@ void GADUSetRewardedAdCallbacks(
     GADURewardedAdDidFailToReceiveAdWithErrorCallback adFailedToLoadCallback,
     GADURewardedAdDidFailToShowAdWithErrorCallback adFailedToShowCallback,
     GADURewardedAdDidOpenCallback didOpenCallback, GADURewardedAdDidCloseCallback didCloseCallback,
-    GADUUserEarnedRewardCallback didEarnRewardCallback) {
+    GADUUserEarnedRewardCallback didEarnRewardCallback,
+    GADURewardedAdPaidEventCallback paidEventCallback) {
   GADURewardedAd *internalRewardedAd = (__bridge GADURewardedAd *)rewardedAd;
   internalRewardedAd.adReceivedCallback = adReceivedCallback;
   internalRewardedAd.adFailedToLoadCallback = adFailedToLoadCallback;
@@ -311,6 +364,8 @@ void GADUSetRewardedAdCallbacks(
   internalRewardedAd.didOpenCallback = didOpenCallback;
   internalRewardedAd.didCloseCallback = didCloseCallback;
   internalRewardedAd.didEarnRewardCallback = didEarnRewardCallback;
+
+  internalRewardedAd.paidEventCallback = paidEventCallback;
 }
 
 /// Sets the banner callback methods to be invoked during native ad events.
@@ -395,6 +450,20 @@ BOOL GADURewardedAdReady(GADUTypeRewardedAdRef rewardedAd) {
 void GADUShowRewardedAd(GADUTypeRewardedAdRef rewardedAd) {
   GADURewardedAd *internalRewardedAd = (__bridge GADURewardedAd *)rewardedAd;
   [internalRewardedAd show];
+}
+
+/// Returns the type of the reward.
+const char *GADURewardedAdGetRewardType(GADUTypeRewardedAdRef rewardedAd) {
+  GADURewardedAd *internalRewardedAd = (__bridge GADURewardedAd *)rewardedAd;
+  GADAdReward *reward = internalRewardedAd.rewardedAd.reward;
+  return cStringCopy(reward.type.UTF8String);
+}
+
+/// Returns the amount of the reward.
+double GADURewardedAdGetRewardAmount(GADUTypeRewardedAdRef rewardedAd) {
+  GADURewardedAd *internalRewardedAd = (__bridge GADURewardedAd *)rewardedAd;
+  GADAdReward *reward = internalRewardedAd.rewardedAd.reward;
+  return reward.amount.doubleValue;
 }
 
 /// Creates an empty GADRequest and returns its reference.
@@ -585,7 +654,7 @@ const char *GADUNativeCustomTemplateAdImageAsBytesForKey(
       (__bridge GADUNativeCustomTemplateAd *)nativeCustomTemplateAd;
   NSData *imageData = UIImageJPEGRepresentation(
       [internalNativeCustomTemplateAd imageForKey:GADUStringFromUTF8String(key)], 0.0);
-  NSString *base64String = [imageData base64EncodedStringWithOptions:nil];
+  NSString *base64String = [imageData base64EncodedStringWithOptions:0];
   return cStringCopy(base64String.UTF8String);
 }
 
